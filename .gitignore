@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.venv-weather/
+.venv/
+weather_artifacts/
+weather_output/
+weather_demo/
+weather_benchmark_v2/
+.pytest_cache/
+.env
+.env.*
+weather_config.json
