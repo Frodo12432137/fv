@@ -27,6 +27,9 @@ def parser(training: bool) -> argparse.ArgumentParser:
     result.add_argument("--csv-separator", default=",")
     result.add_argument("--forecast-sql", type=Path, default=SQL_ROOT / "forecasts.sql")
     result.add_argument("--observation-sql", type=Path, default=SQL_ROOT / "observations.sql")
+    if training:
+        result.add_argument("--data-kind", choices=["unspecified", "measured", "synthetic"], default="unspecified",
+                            help="Opis rodzaju danych w raporcie statystyk; nie zmienia uczenia.")
     if not training:
         result.add_argument("--output", type=Path, default=ROOT / "weather_output" / "prognoza_pogody_korekta_24h.csv")
     return result
@@ -52,7 +55,7 @@ def run(training: bool, argv=None) -> int:
         with threadpool_limits(limits=cfg.n_jobs):
             if training:
                 result = train(raw_forecasts, raw_observations, as_of, cfg, args.artifacts,
-                               log=lambda message: print(message, flush=True))
+                               log=lambda message: print(message, flush=True), data_kind=args.data_kind)
                 return 0 if result["published"] else 2
             predict(raw_forecasts, raw_observations, as_of, args.artifacts, args.output,
                     log=lambda message: print(message, flush=True))

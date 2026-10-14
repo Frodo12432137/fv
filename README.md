@@ -36,13 +36,15 @@ prognozy. Harmonogram jobów Jenkins ustawiany jest poza tym pakietem.
 
 - [Pełna instrukcja, format danych i założenia czasu](START_KOREKTA_POGODY_24H.md)
 - [Raport testów i ograniczenia oceny](TESTY_KOREKTA_POGODY_24H.md)
+- [Statystyki modelu i ocena zapisanych prognoz](STATYSTYKI_MODELU.md)
+- [Przykładowy raport statystyk — dane syntetyczne](examples/statistics/synthetic_backtest/model_statistics.md)
 - [Porównanie v1 i v2 na danych syntetycznych](BENCHMARK_KOREKTA_POGODY_V2.csv)
 
 Testy:
 
 ```powershell
 .\.venv\Scripts\python.exe -m pip install pytest
-.\.venv\Scripts\python.exe -m pytest tests\test_weather_correction.py -q
+.\.venv\Scripts\python.exe -m pytest tests -q
 ```
 
 Lokalna ocena obejmuje dane syntetyczne. Skuteczność na danych PGE i połączenia

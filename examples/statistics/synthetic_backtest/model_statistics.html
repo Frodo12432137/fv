@@ -1,0 +1,151 @@
+<!doctype html><html lang="pl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Statystyki oceny modelu</title><style>body{font:15px system-ui,sans-serif;color:#172b40;background:#f5f7fa;margin:0;padding:24px}main{max-width:1440px;margin:auto}h1{font-size:28px}h2{font-size:19px}section{background:white;border:1px solid #dae2ec;border-radius:10px;padding:16px;margin:16px 0}.scroll{overflow:auto}table{border-collapse:collapse;width:100%;white-space:nowrap;font-size:13px}th,td{text-align:right;padding:9px;border-bottom:1px solid #e3e8ee}th{background:#edf2f8}td:first-child,th:first-child{text-align:left}.kind{font-weight:700;color:#9c4a08}p{line-height:1.6}summary{cursor:pointer;font-weight:650}footer{line-height:1.6}@media(max-width:600px){body{padding:10px}}</style><main><h1>Statystyki oceny modelu</h1>
+<p class="kind">DANE SYNTETYCZNE — nie jest to ocena farm PGE</p>
+<p class="">Chronologiczne testy poza treningiem i walidacją</p>
+<p class="">Wersja: 2.1.0</p>
+<p class="">Prognozy od 2026-03-14T00:00:00+00:00 do 2026-03-31T18:00:00+00:00. Wiersze prognoz: 19296.</p>
+<p class="">Dodatnia poprawa oznacza mniejszy błąd korekty. Wartości — oznaczają brak danych lub niezdefiniowaną miarę.</p>
+<p class="">Bramka publikacji: zaliczona.</p>
+<p class="">Ocena wcześniejszych modeli testowych. Pakiet produkcyjny ponownie uczony na całej historii wymaga późniejszej oceny zapisanych prognoz.</p>
+<section><h2>Wynik łączny</h2>
+<div class="scroll"><table><thead><tr><th>Farma</th><th>Horyzont</th><th>Parametr</th><th>Jednostka</th><th>N</th><th>MAE surowe</th><th>MAE korekty</th><th>Poprawa %</th><th>RMSE korekty</th><th>Bias korekty</th><th>P95 korekty</th></tr></thead><tbody>
+<tr><td>ALL</td><td>ALL</td><td>Prędkość wiatru</td><td>m/s</td><td>19248</td><td>1.352</td><td>0.127</td><td>90.585</td><td>0.160</td><td>-0.001</td><td>0.314</td></tr>
+<tr><td>ALL</td><td>ALL</td><td>Temperatura</td><td>°C</td><td>19248</td><td>1.434</td><td>0.163</td><td>88.625</td><td>0.218</td><td>0.003</td><td>0.433</td></tr>
+<tr><td>ALL</td><td>ALL</td><td>Kierunek wiatru</td><td>°</td><td>19248</td><td>11.903</td><td>2.461</td><td>79.324</td><td>3.655</td><td>0.751</td><td>8.393</td></tr>
+</tbody></table></div></section>
+<section><h2>Pokrycie, stabilność i duże błędy</h2>
+<div class="scroll"><table><thead><tr><th>Parametr</th><th>Pokrycie %</th><th>Brak pomiaru</th><th>Cisza wiatru</th><th>Lepsze wiersze %</th><th>Lepsze dni %</th><th>P99 korekty</th><th>Max korekty</th><th>95% CI poprawy MAE</th></tr></thead><tbody>
+<tr><td>Prędkość wiatru</td><td>99.751</td><td>48</td><td>0</td><td>99.808</td><td>100.000</td><td>0.419</td><td>0.701</td><td>1.050 … 1.375 m/s</td></tr>
+<tr><td>Temperatura</td><td>99.751</td><td>48</td><td>0</td><td>91.989</td><td>100.000</td><td>0.698</td><td>1.412</td><td>1.213 … 1.339 °C</td></tr>
+<tr><td>Kierunek wiatru</td><td>99.751</td><td>48</td><td>0</td><td>94.810</td><td>100.000</td><td>13.750</td><td>18.948</td><td>8.394 … 10.452 °</td></tr>
+</tbody></table></div></section>
+<section><h2>Według farmy</h2>
+<div class="scroll"><table><thead><tr><th>Farma</th><th>Horyzont</th><th>Parametr</th><th>Jednostka</th><th>N</th><th>MAE surowe</th><th>MAE korekty</th><th>Poprawa %</th><th>RMSE korekty</th><th>Bias korekty</th><th>P95 korekty</th></tr></thead><tbody>
+<tr><td>GAL</td><td>ALL</td><td>Prędkość wiatru</td><td>m/s</td><td>9624</td><td>1.301</td><td>0.130</td><td>90.002</td><td>0.163</td><td>-0.004</td><td>0.318</td></tr>
+<tr><td>GAL</td><td>ALL</td><td>Temperatura</td><td>°C</td><td>9624</td><td>1.353</td><td>0.163</td><td>87.952</td><td>0.221</td><td>-0.025</td><td>0.447</td></tr>
+<tr><td>GAL</td><td>ALL</td><td>Kierunek wiatru</td><td>°</td><td>9624</td><td>10.523</td><td>1.788</td><td>83.007</td><td>2.405</td><td>0.959</td><td>4.393</td></tr>
+<tr><td>KAM</td><td>ALL</td><td>Prędkość wiatru</td><td>m/s</td><td>9624</td><td>1.403</td><td>0.125</td><td>91.125</td><td>0.157</td><td>0.001</td><td>0.311</td></tr>
+<tr><td>KAM</td><td>ALL</td><td>Temperatura</td><td>°C</td><td>9624</td><td>1.514</td><td>0.163</td><td>89.226</td><td>0.216</td><td>0.031</td><td>0.423</td></tr>
+<tr><td>KAM</td><td>ALL</td><td>Kierunek wiatru</td><td>°</td><td>9624</td><td>13.284</td><td>3.134</td><td>76.406</td><td>4.575</td><td>0.543</td><td>11.516</td></tr>
+</tbody></table></div></section>
+<section><h2>Według wyprzedzenia prognozy</h2>
+<div class="scroll"><table><thead><tr><th>Farma</th><th>Horyzont</th><th>Parametr</th><th>Jednostka</th><th>N</th><th>MAE surowe</th><th>MAE korekty</th><th>Poprawa %</th><th>RMSE korekty</th><th>Bias korekty</th><th>P95 korekty</th></tr></thead><tbody>
+<tr><td>ALL</td><td>0-3h</td><td>Prędkość wiatru</td><td>m/s</td><td>1728</td><td>1.371</td><td>0.129</td><td>90.571</td><td>0.163</td><td>0.001</td><td>0.314</td></tr>
+<tr><td>ALL</td><td>0-3h</td><td>Temperatura</td><td>°C</td><td>1728</td><td>1.452</td><td>0.164</td><td>88.735</td><td>0.223</td><td>-0.006</td><td>0.427</td></tr>
+<tr><td>ALL</td><td>0-3h</td><td>Kierunek wiatru</td><td>°</td><td>1728</td><td>11.728</td><td>2.083</td><td>82.238</td><td>3.008</td><td>0.235</td><td>7.278</td></tr>
+<tr><td>ALL</td><td>3-6h</td><td>Prędkość wiatru</td><td>m/s</td><td>1720</td><td>1.374</td><td>0.127</td><td>90.773</td><td>0.159</td><td>-0.003</td><td>0.312</td></tr>
+<tr><td>ALL</td><td>3-6h</td><td>Temperatura</td><td>°C</td><td>1720</td><td>1.406</td><td>0.163</td><td>88.390</td><td>0.212</td><td>0.003</td><td>0.422</td></tr>
+<tr><td>ALL</td><td>3-6h</td><td>Kierunek wiatru</td><td>°</td><td>1720</td><td>11.727</td><td>2.046</td><td>82.557</td><td>3.058</td><td>0.672</td><td>7.153</td></tr>
+<tr><td>ALL</td><td>6-12h</td><td>Prędkość wiatru</td><td>m/s</td><td>3352</td><td>1.370</td><td>0.125</td><td>90.894</td><td>0.156</td><td>0.001</td><td>0.308</td></tr>
+<tr><td>ALL</td><td>6-12h</td><td>Temperatura</td><td>°C</td><td>3352</td><td>1.448</td><td>0.155</td><td>89.266</td><td>0.208</td><td>0.004</td><td>0.412</td></tr>
+<tr><td>ALL</td><td>6-12h</td><td>Kierunek wiatru</td><td>°</td><td>3352</td><td>11.871</td><td>2.355</td><td>80.165</td><td>3.502</td><td>0.827</td><td>8.224</td></tr>
+<tr><td>ALL</td><td>12-24h</td><td>Prędkość wiatru</td><td>m/s</td><td>6416</td><td>1.351</td><td>0.125</td><td>90.763</td><td>0.156</td><td>-0.001</td><td>0.305</td></tr>
+<tr><td>ALL</td><td>12-24h</td><td>Temperatura</td><td>°C</td><td>6416</td><td>1.422</td><td>0.160</td><td>88.732</td><td>0.214</td><td>0.002</td><td>0.423</td></tr>
+<tr><td>ALL</td><td>12-24h</td><td>Kierunek wiatru</td><td>°</td><td>6416</td><td>11.997</td><td>2.433</td><td>79.723</td><td>3.481</td><td>1.098</td><td>7.563</td></tr>
+<tr><td>ALL</td><td>24-36h</td><td>Prędkość wiatru</td><td>m/s</td><td>6032</td><td>1.331</td><td>0.131</td><td>90.165</td><td>0.165</td><td>-0.003</td><td>0.325</td></tr>
+<tr><td>ALL</td><td>24-36h</td><td>Temperatura</td><td>°C</td><td>6032</td><td>1.440</td><td>0.170</td><td>88.187</td><td>0.229</td><td>0.005</td><td>0.455</td></tr>
+<tr><td>ALL</td><td>24-36h</td><td>Kierunek wiatru</td><td>°</td><td>6032</td><td>11.922</td><td>2.777</td><td>76.704</td><td>4.203</td><td>0.511</td><td>11.058</td></tr>
+</tbody></table></div></section>
+<section><details><summary>Farma i wyprzedzenie</summary>
+<div class="scroll"><table><thead><tr><th>Farma</th><th>Horyzont</th><th>Parametr</th><th>Jednostka</th><th>N</th><th>MAE surowe</th><th>MAE korekty</th><th>Poprawa %</th><th>RMSE korekty</th><th>Bias korekty</th><th>P95 korekty</th></tr></thead><tbody>
+<tr><td>GAL</td><td>0-3h</td><td>Prędkość wiatru</td><td>m/s</td><td>864</td><td>1.315</td><td>0.128</td><td>90.247</td><td>0.162</td><td>-0.006</td><td>0.314</td></tr>
+<tr><td>GAL</td><td>0-3h</td><td>Temperatura</td><td>°C</td><td>864</td><td>1.370</td><td>0.167</td><td>87.818</td><td>0.232</td><td>-0.024</td><td>0.466</td></tr>
+<tr><td>GAL</td><td>0-3h</td><td>Kierunek wiatru</td><td>°</td><td>864</td><td>10.392</td><td>1.973</td><td>81.016</td><td>2.779</td><td>0.477</td><td>6.479</td></tr>
+<tr><td>GAL</td><td>3-6h</td><td>Prędkość wiatru</td><td>m/s</td><td>860</td><td>1.328</td><td>0.133</td><td>89.974</td><td>0.166</td><td>-0.000</td><td>0.319</td></tr>
+<tr><td>GAL</td><td>3-6h</td><td>Temperatura</td><td>°C</td><td>860</td><td>1.329</td><td>0.162</td><td>87.823</td><td>0.212</td><td>-0.029</td><td>0.430</td></tr>
+<tr><td>GAL</td><td>3-6h</td><td>Kierunek wiatru</td><td>°</td><td>860</td><td>10.315</td><td>1.581</td><td>84.675</td><td>2.067</td><td>0.866</td><td>3.906</td></tr>
+<tr><td>GAL</td><td>6-12h</td><td>Prędkość wiatru</td><td>m/s</td><td>1676</td><td>1.318</td><td>0.127</td><td>90.354</td><td>0.159</td><td>-0.002</td><td>0.310</td></tr>
+<tr><td>GAL</td><td>6-12h</td><td>Temperatura</td><td>°C</td><td>1676</td><td>1.368</td><td>0.157</td><td>88.533</td><td>0.212</td><td>-0.022</td><td>0.435</td></tr>
+<tr><td>GAL</td><td>6-12h</td><td>Kierunek wiatru</td><td>°</td><td>1676</td><td>10.487</td><td>1.646</td><td>84.304</td><td>2.202</td><td>0.925</td><td>4.055</td></tr>
+<tr><td>GAL</td><td>12-24h</td><td>Prędkość wiatru</td><td>m/s</td><td>3208</td><td>1.300</td><td>0.127</td><td>90.196</td><td>0.159</td><td>-0.003</td><td>0.309</td></tr>
+<tr><td>GAL</td><td>12-24h</td><td>Temperatura</td><td>°C</td><td>3208</td><td>1.343</td><td>0.159</td><td>88.143</td><td>0.215</td><td>-0.026</td><td>0.433</td></tr>
+<tr><td>GAL</td><td>12-24h</td><td>Kierunek wiatru</td><td>°</td><td>3208</td><td>10.614</td><td>1.730</td><td>83.699</td><td>2.276</td><td>1.012</td><td>4.084</td></tr>
+<tr><td>GAL</td><td>24-36h</td><td>Prędkość wiatru</td><td>m/s</td><td>3016</td><td>1.281</td><td>0.134</td><td>89.528</td><td>0.169</td><td>-0.007</td><td>0.334</td></tr>
+<tr><td>GAL</td><td>24-36h</td><td>Temperatura</td><td>°C</td><td>3016</td><td>1.359</td><td>0.170</td><td>87.501</td><td>0.231</td><td>-0.025</td><td>0.461</td></tr>
+<tr><td>GAL</td><td>24-36h</td><td>Kierunek wiatru</td><td>°</td><td>3016</td><td>10.543</td><td>1.935</td><td>81.645</td><td>2.612</td><td>1.087</td><td>4.549</td></tr>
+<tr><td>KAM</td><td>0-3h</td><td>Prędkość wiatru</td><td>m/s</td><td>864</td><td>1.426</td><td>0.130</td><td>90.868</td><td>0.164</td><td>0.008</td><td>0.314</td></tr>
+<tr><td>KAM</td><td>0-3h</td><td>Temperatura</td><td>°C</td><td>864</td><td>1.534</td><td>0.160</td><td>89.553</td><td>0.213</td><td>0.012</td><td>0.396</td></tr>
+<tr><td>KAM</td><td>0-3h</td><td>Kierunek wiatru</td><td>°</td><td>864</td><td>13.064</td><td>2.193</td><td>83.210</td><td>3.221</td><td>-0.008</td><td>7.808</td></tr>
+<tr><td>KAM</td><td>3-6h</td><td>Prędkość wiatru</td><td>m/s</td><td>860</td><td>1.420</td><td>0.120</td><td>91.520</td><td>0.151</td><td>-0.006</td><td>0.300</td></tr>
+<tr><td>KAM</td><td>3-6h</td><td>Temperatura</td><td>°C</td><td>860</td><td>1.484</td><td>0.165</td><td>88.897</td><td>0.212</td><td>0.035</td><td>0.413</td></tr>
+<tr><td>KAM</td><td>3-6h</td><td>Kierunek wiatru</td><td>°</td><td>860</td><td>13.138</td><td>2.510</td><td>80.894</td><td>3.799</td><td>0.477</td><td>9.656</td></tr>
+<tr><td>KAM</td><td>6-12h</td><td>Prędkość wiatru</td><td>m/s</td><td>1676</td><td>1.421</td><td>0.122</td><td>91.394</td><td>0.153</td><td>0.003</td><td>0.306</td></tr>
+<tr><td>KAM</td><td>6-12h</td><td>Temperatura</td><td>°C</td><td>1676</td><td>1.528</td><td>0.154</td><td>89.923</td><td>0.203</td><td>0.031</td><td>0.405</td></tr>
+<tr><td>KAM</td><td>6-12h</td><td>Kierunek wiatru</td><td>°</td><td>1676</td><td>13.256</td><td>3.063</td><td>76.890</td><td>4.436</td><td>0.728</td><td>11.104</td></tr>
+<tr><td>KAM</td><td>12-24h</td><td>Prędkość wiatru</td><td>m/s</td><td>3208</td><td>1.402</td><td>0.122</td><td>91.289</td><td>0.153</td><td>0.001</td><td>0.294</td></tr>
+<tr><td>KAM</td><td>12-24h</td><td>Temperatura</td><td>°C</td><td>3208</td><td>1.502</td><td>0.161</td><td>89.258</td><td>0.213</td><td>0.030</td><td>0.418</td></tr>
+<tr><td>KAM</td><td>12-24h</td><td>Kierunek wiatru</td><td>°</td><td>3208</td><td>13.381</td><td>3.135</td><td>76.568</td><td>4.365</td><td>1.184</td><td>10.871</td></tr>
+<tr><td>KAM</td><td>24-36h</td><td>Prędkość wiatru</td><td>m/s</td><td>3016</td><td>1.382</td><td>0.128</td><td>90.756</td><td>0.162</td><td>0.000</td><td>0.320</td></tr>
+<tr><td>KAM</td><td>24-36h</td><td>Temperatura</td><td>°C</td><td>3016</td><td>1.521</td><td>0.170</td><td>88.799</td><td>0.227</td><td>0.035</td><td>0.451</td></tr>
+<tr><td>KAM</td><td>24-36h</td><td>Kierunek wiatru</td><td>°</td><td>3016</td><td>13.300</td><td>3.620</td><td>72.786</td><td>5.339</td><td>-0.064</td><td>13.275</td></tr>
+</tbody></table></div></details></section>
+<section><details><summary>Test / zbiór: 1</summary>
+<div class="scroll"><table><thead><tr><th>Farma</th><th>Horyzont</th><th>Parametr</th><th>Jednostka</th><th>N</th><th>MAE surowe</th><th>MAE korekty</th><th>Poprawa %</th><th>RMSE korekty</th><th>Bias korekty</th><th>P95 korekty</th></tr></thead><tbody>
+<tr><td>ALL</td><td>ALL</td><td>Prędkość wiatru</td><td>m/s</td><td>9624</td><td>1.393</td><td>0.127</td><td>90.903</td><td>0.159</td><td>-0.016</td><td>0.310</td></tr>
+<tr><td>ALL</td><td>ALL</td><td>Temperatura</td><td>°C</td><td>9624</td><td>1.423</td><td>0.133</td><td>90.661</td><td>0.173</td><td>0.012</td><td>0.336</td></tr>
+<tr><td>ALL</td><td>ALL</td><td>Kierunek wiatru</td><td>°</td><td>9624</td><td>11.874</td><td>2.436</td><td>79.485</td><td>3.640</td><td>0.545</td><td>8.592</td></tr>
+</tbody></table></div></details></section>
+<section><details><summary>Test / zbiór: 2</summary>
+<div class="scroll"><table><thead><tr><th>Farma</th><th>Horyzont</th><th>Parametr</th><th>Jednostka</th><th>N</th><th>MAE surowe</th><th>MAE korekty</th><th>Poprawa %</th><th>RMSE korekty</th><th>Bias korekty</th><th>P95 korekty</th></tr></thead><tbody>
+<tr><td>ALL</td><td>ALL</td><td>Prędkość wiatru</td><td>m/s</td><td>9624</td><td>1.311</td><td>0.128</td><td>90.247</td><td>0.161</td><td>0.014</td><td>0.318</td></tr>
+<tr><td>ALL</td><td>ALL</td><td>Temperatura</td><td>°C</td><td>9624</td><td>1.445</td><td>0.193</td><td>86.620</td><td>0.256</td><td>-0.007</td><td>0.509</td></tr>
+<tr><td>ALL</td><td>ALL</td><td>Kierunek wiatru</td><td>°</td><td>9624</td><td>11.933</td><td>2.486</td><td>79.164</td><td>3.670</td><td>0.957</td><td>8.206</td></tr>
+</tbody></table></div></details></section>
+<section><details><summary>Dzienna ocena</summary>
+<div class="scroll"><table><thead><tr><th>Dzień UTC</th><th>Parametr</th><th>N</th><th>MAE surowe</th><th>MAE korekty</th><th>Poprawa %</th></tr></thead><tbody>
+<tr><td>2026-03-14</td><td>Prędkość wiatru</td><td>1152</td><td>1.681</td><td>0.118</td><td>92.953</td></tr>
+<tr><td>2026-03-14</td><td>Temperatura</td><td>1152</td><td>1.306</td><td>0.134</td><td>89.754</td></tr>
+<tr><td>2026-03-14</td><td>Kierunek wiatru</td><td>1152</td><td>12.581</td><td>2.205</td><td>82.475</td></tr>
+<tr><td>2026-03-15</td><td>Prędkość wiatru</td><td>1152</td><td>1.403</td><td>0.125</td><td>91.113</td></tr>
+<tr><td>2026-03-15</td><td>Temperatura</td><td>1152</td><td>1.251</td><td>0.118</td><td>90.603</td></tr>
+<tr><td>2026-03-15</td><td>Kierunek wiatru</td><td>1152</td><td>15.597</td><td>3.311</td><td>78.771</td></tr>
+<tr><td>2026-03-16</td><td>Prędkość wiatru</td><td>1152</td><td>0.947</td><td>0.133</td><td>85.965</td></tr>
+<tr><td>2026-03-16</td><td>Temperatura</td><td>1152</td><td>1.388</td><td>0.099</td><td>92.887</td></tr>
+<tr><td>2026-03-16</td><td>Kierunek wiatru</td><td>1152</td><td>10.359</td><td>1.956</td><td>81.113</td></tr>
+<tr><td>2026-03-17</td><td>Prędkość wiatru</td><td>1152</td><td>1.101</td><td>0.123</td><td>88.854</td></tr>
+<tr><td>2026-03-17</td><td>Temperatura</td><td>1152</td><td>1.553</td><td>0.092</td><td>94.087</td></tr>
+<tr><td>2026-03-17</td><td>Kierunek wiatru</td><td>1152</td><td>9.038</td><td>2.972</td><td>67.121</td></tr>
+<tr><td>2026-03-18</td><td>Prędkość wiatru</td><td>1152</td><td>1.537</td><td>0.124</td><td>91.922</td></tr>
+<tr><td>2026-03-18</td><td>Temperatura</td><td>1152</td><td>1.359</td><td>0.127</td><td>90.673</td></tr>
+<tr><td>2026-03-18</td><td>Kierunek wiatru</td><td>1152</td><td>13.753</td><td>2.348</td><td>82.924</td></tr>
+<tr><td>2026-03-19</td><td>Prędkość wiatru</td><td>1152</td><td>1.628</td><td>0.123</td><td>92.456</td></tr>
+<tr><td>2026-03-19</td><td>Temperatura</td><td>1152</td><td>1.363</td><td>0.159</td><td>88.315</td></tr>
+<tr><td>2026-03-19</td><td>Kierunek wiatru</td><td>1152</td><td>13.736</td><td>2.812</td><td>79.526</td></tr>
+<tr><td>2026-03-20</td><td>Prędkość wiatru</td><td>1152</td><td>1.406</td><td>0.128</td><td>90.863</td></tr>
+<tr><td>2026-03-20</td><td>Temperatura</td><td>1152</td><td>1.428</td><td>0.158</td><td>88.941</td></tr>
+<tr><td>2026-03-20</td><td>Kierunek wiatru</td><td>1152</td><td>10.235</td><td>1.892</td><td>81.518</td></tr>
+<tr><td>2026-03-21</td><td>Prędkość wiatru</td><td>1096</td><td>1.394</td><td>0.132</td><td>90.507</td></tr>
+<tr><td>2026-03-21</td><td>Temperatura</td><td>1096</td><td>1.680</td><td>0.150</td><td>91.053</td></tr>
+<tr><td>2026-03-21</td><td>Kierunek wiatru</td><td>1096</td><td>9.794</td><td>2.289</td><td>76.625</td></tr>
+<tr><td>2026-03-22</td><td>Prędkość wiatru</td><td>464</td><td>1.512</td><td>0.145</td><td>90.379</td></tr>
+<tr><td>2026-03-22</td><td>Temperatura</td><td>464</td><td>1.583</td><td>0.201</td><td>87.299</td></tr>
+<tr><td>2026-03-22</td><td>Kierunek wiatru</td><td>464</td><td>11.374</td><td>1.678</td><td>85.244</td></tr>
+<tr><td>2026-03-23</td><td>Prędkość wiatru</td><td>1152</td><td>1.493</td><td>0.122</td><td>91.827</td></tr>
+<tr><td>2026-03-23</td><td>Temperatura</td><td>1152</td><td>1.431</td><td>0.310</td><td>78.341</td></tr>
+<tr><td>2026-03-23</td><td>Kierunek wiatru</td><td>1152</td><td>13.610</td><td>2.139</td><td>84.282</td></tr>
+<tr><td>2026-03-24</td><td>Prędkość wiatru</td><td>1152</td><td>0.991</td><td>0.134</td><td>86.462</td></tr>
+<tr><td>2026-03-24</td><td>Temperatura</td><td>1152</td><td>1.448</td><td>0.235</td><td>83.785</td></tr>
+<tr><td>2026-03-24</td><td>Kierunek wiatru</td><td>1152</td><td>12.511</td><td>2.585</td><td>79.339</td></tr>
+<tr><td>2026-03-25</td><td>Prędkość wiatru</td><td>1152</td><td>0.853</td><td>0.124</td><td>85.473</td></tr>
+<tr><td>2026-03-25</td><td>Temperatura</td><td>1152</td><td>1.608</td><td>0.182</td><td>88.706</td></tr>
+<tr><td>2026-03-25</td><td>Kierunek wiatru</td><td>1152</td><td>8.342</td><td>2.439</td><td>70.768</td></tr>
+<tr><td>2026-03-26</td><td>Prędkość wiatru</td><td>1152</td><td>1.260</td><td>0.125</td><td>90.110</td></tr>
+<tr><td>2026-03-26</td><td>Temperatura</td><td>1152</td><td>1.387</td><td>0.230</td><td>83.442</td></tr>
+<tr><td>2026-03-26</td><td>Kierunek wiatru</td><td>1152</td><td>10.556</td><td>2.076</td><td>80.333</td></tr>
+<tr><td>2026-03-27</td><td>Prędkość wiatru</td><td>1152</td><td>1.310</td><td>0.120</td><td>90.808</td></tr>
+<tr><td>2026-03-27</td><td>Temperatura</td><td>1152</td><td>1.387</td><td>0.243</td><td>82.465</td></tr>
+<tr><td>2026-03-27</td><td>Kierunek wiatru</td><td>1152</td><td>16.053</td><td>3.543</td><td>77.929</td></tr>
+<tr><td>2026-03-28</td><td>Prędkość wiatru</td><td>1152</td><td>1.049</td><td>0.131</td><td>87.489</td></tr>
+<tr><td>2026-03-28</td><td>Temperatura</td><td>1152</td><td>1.424</td><td>0.159</td><td>88.824</td></tr>
+<tr><td>2026-03-28</td><td>Kierunek wiatru</td><td>1152</td><td>11.720</td><td>2.581</td><td>77.981</td></tr>
+<tr><td>2026-03-29</td><td>Prędkość wiatru</td><td>1152</td><td>1.403</td><td>0.130</td><td>90.759</td></tr>
+<tr><td>2026-03-29</td><td>Temperatura</td><td>1152</td><td>1.561</td><td>0.110</td><td>92.975</td></tr>
+<tr><td>2026-03-29</td><td>Kierunek wiatru</td><td>1152</td><td>8.231</td><td>2.094</td><td>74.556</td></tr>
+<tr><td>2026-03-30</td><td>Prędkość wiatru</td><td>1096</td><td>1.888</td><td>0.128</td><td>93.219</td></tr>
+<tr><td>2026-03-30</td><td>Temperatura</td><td>1096</td><td>1.368</td><td>0.110</td><td>91.996</td></tr>
+<tr><td>2026-03-30</td><td>Kierunek wiatru</td><td>1096</td><td>12.767</td><td>2.260</td><td>82.294</td></tr>
+<tr><td>2026-03-31</td><td>Prędkość wiatru</td><td>464</td><td>1.974</td><td>0.149</td><td>92.428</td></tr>
+<tr><td>2026-03-31</td><td>Temperatura</td><td>464</td><td>1.297</td><td>0.106</td><td>91.794</td></tr>
+<tr><td>2026-03-31</td><td>Kierunek wiatru</td><td>464</td><td>16.184</td><td>2.890</td><td>82.143</td></tr>
+</tbody></table></div></details></section>
+<footer><h2>Interpretacja</h2><p>Te same poprawne etykiety dla prognozy surowej i skorygowanej.</p><p>Najkrótszy błąd na okręgu, od -180 do 180°. Pomijamy wiatr poniżej 1.0 m/s.</p><p>Prognoza minus pomiar; dodatni bias oznacza zawyżanie (dla kierunku przesunięcie kątowe).</p><p>95% przedział z 500 losowań dwudniowych bloków dni UTC wydania/predykcji; minimum 7 dni. Diagnostyczny, bez korekty na wiele porównań.</p><p>Wiersz oznacza jedną ocenioną prognozę. Różne paczki mogą dotyczyć tego samego pomiaru; wiersze nie są niezależnymi pomiarami.</p><p>Statystyki łączne liczymy z błędów wszystkich testów, bez uśredniania percentyli lub R².</p><p>Tylko prędkość i temperatura; brak przy stałych pomiarach. Dla kierunku nie stosujemy zwykłego R².</p><p>Progi opisowe: 1 m/s, 1°C, 15°. Nie stanowią zatwierdzonych kryteriów biznesowych.</p></footer></main></html>

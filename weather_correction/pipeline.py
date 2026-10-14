@@ -8,6 +8,7 @@ import pandas as pd
 
 from .config import FARM_NAMES, Settings
 from .data import KEY, angle_diff, observation_targets, prepare_forecasts, prepare_observations, select_forecast_run
+from .evaluation import build_assessment, test_samples
 from .features import build_features, lead_bucket, residual_history
 from .models import (TARGETS, candidate_predictions, choose_routes, fit_candidates, metric_report,
                      required_families, route_components, route_predictions, tune_families)
@@ -61,7 +62,7 @@ def select_methods(features, rows, train_mask, val_mask, validation_start, cfg, 
 
 
 def train(raw_forecasts: pd.DataFrame, raw_observations: pd.DataFrame, as_of: pd.Timestamp,
-          cfg: Settings, artifacts: Path, log=print) -> dict:
+          cfg: Settings, artifacts: Path, log=print, data_kind="unspecified") -> dict:
     log("Przygotowanie wszystkich wydań prognoz i pomiarów.")
     forecasts = prepare_forecasts(raw_forecasts, cfg)
     time_drops_forecast = forecasts.attrs.get("dropped_timezone_rows", 0)
@@ -87,6 +88,7 @@ def train(raw_forecasts: pd.DataFrame, raw_observations: pd.DataFrame, as_of: pd
     log(f"Budowa cech dostępnych przy wydaniu prognozy: {len(rows):,} wierszy.")
     features = build_features(rows, obs, errors, cfg, forecast_context=forecasts)
     test_reports, selection_reports, fold_reports, tuning_reports = [], [], [], []
+    evaluation_samples = []
     latest_test_metrics = None
     for fold in range(cfg.backtest_folds):
         train_mask, val_mask, test_mask, split = chronological_split(rows, as_of, cfg, fold)
@@ -99,6 +101,10 @@ def train(raw_forecasts: pd.DataFrame, raw_observations: pd.DataFrame, as_of: pd
         predictions = candidate_predictions(family, test_features, test_rows, cfg)
         corrected = route_predictions(predictions, routes, test_features, test_rows)
         measured = metric_report(test_rows, corrected, cfg)
+        test_grid = eligible.loc[(eligible.available_at >= pd.Timestamp(split["test_start"])) &
+                                 (eligible.available_at < pd.Timestamp(split["test_end"])) &
+                                 (eligible.valid_at <= pd.Timestamp(split["test_end"]))]
+        evaluation_samples.append(test_samples(test_rows, corrected, fold + 1, test_grid))
         for record in measured:
             record["fold"] = fold + 1
         for record in candidates:
@@ -146,7 +152,7 @@ def train(raw_forecasts: pd.DataFrame, raw_observations: pd.DataFrame, as_of: pd
         "as_of_utc": as_of.isoformat(), "settings": cfg.to_dict(), "library_versions": versions,
         "feature_columns": features.columns.tolist(),
         "published": publish, "folds": fold_reports, "publication_failures": failures,
-        "tuning": tuning_reports, "model_version": "2.0.0",
+        "tuning": tuning_reports, "model_version": "2.1.0", "data_kind": data_kind,
         "production_selection": {**production_periods, "end": as_of.isoformat(), "profiles": production_tuning},
         "assessment": "Trening → strojenie profili → oddzielna kalibracja korekt/zespołów → niezależny test. Stabilność korekt sprawdzana blokami dni. Pakiet produkcyjny ponownie uczony na całej dostępnej historii.",
         "quality": {"raw_forecast_rows": len(raw_forecasts), "prepared_forecast_rows": len(forecasts),
@@ -163,7 +169,12 @@ def train(raw_forecasts: pd.DataFrame, raw_observations: pd.DataFrame, as_of: pd
     }
     bundle = {"format_version": 1, "settings": cfg.to_dict(), "models": final_models,
               "routes": production_routes, "trained_as_of": as_of.isoformat(), "library_versions": versions}
-    folder = save_bundle(artifacts, bundle, report, test_reports, selection_reports, publish)
+    assessment = build_assessment(pd.concat(evaluation_samples, ignore_index=True), cfg, {
+        "data_kind": data_kind, "assessment_type": "Chronologiczne testy poza treningiem i walidacją",
+        "model_version": report["model_version"], "trained_as_of": as_of.isoformat(),
+        "published": publish, "folds": fold_reports,
+        "note": "Ocena wcześniejszych modeli testowych. Pakiet produkcyjny ponownie uczony na całej historii wymaga późniejszej oceny zapisanych prognoz."})
+    folder = save_bundle(artifacts, bundle, report, test_reports, selection_reports, publish, assessment)
     log(f"Zapisano pakiet i raport: {folder}")
     if not publish:
         log("Kandydat nie przeszedł niezależnej oceny jakości. Aktywny model pozostał bez zmian.")

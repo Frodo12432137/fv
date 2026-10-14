@@ -199,6 +199,12 @@ Każda wersja w `weather_artifacts/model-.../` ma:
   odsetek lepszych dni; rekordy `fold=production` opisują najświeższy wybór;
 - `routes.json` — wybrane metody dla farm i horyzontów.
 
+Każdy trening zapisuje również `model_statistics.html`, `.md`, `.json`, `.csv`
+oraz `daily_statistics.csv`. Raport obejmuje dodatkowe percentyle, R² dla
+parametrów liniowych, częstość poprawy, pokrycie pomiarów i diagnostyczny
+przedział poprawy MAE. Szczegóły i skrypt oceny zapisanych prognoz są opisane
+w [STATYSTYKI_MODELU.md](STATYSTYKI_MODELU.md).
+
 Aktywną wersję wskazuje atomowo zapisany `current.json`. Predykcja sprawdza
 sumę kontrolną modelu. Błąd pobrania, niepełna prognoza albo wadliwe dane
 nie nadpisują wcześniejszego CSV. Odbiorca wyniku powinien sprawdzać powodzenie
@@ -253,7 +259,7 @@ Przykład dotyczy dwóch farm i danych wymyślonych. Jego błędy nie są wyniki
 na historii PGE. Aby uruchomić testy, zainstaluj `pytest` i wykonaj:
 
 ```powershell
-.\.venv\Scripts\python.exe -m pytest tests\test_weather_correction.py -q
+.\.venv\Scripts\python.exe -m pytest tests -q
 ```
 
 Na macOS XGBoost wymaga OpenMP (`brew install libomp`). W lokalnym środowisku

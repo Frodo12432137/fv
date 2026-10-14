@@ -71,6 +71,8 @@ def main(argv=None):
                 command = [sys.executable, str(source / "uruchom_trening_pogody.py"), "--config", str(config),
                     "--forecast-csv", str(folder / "forecasts.csv"), "--observation-csv", str(folder / "observations.csv"),
                     "--as-of", as_of.isoformat(), "--artifacts", str(models)]
+                if version == "v2":
+                    command += ["--data-kind", "synthetic"]
                 started = time.monotonic()
                 with (folder / f"train_{version}.log").open("w", encoding="utf-8") as log:
                     result = subprocess.run(command, cwd=source, env=os.environ.copy(), stdout=log, stderr=subprocess.STDOUT)

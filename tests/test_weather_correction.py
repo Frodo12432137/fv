@@ -252,6 +252,8 @@ def test_real_training_and_prediction_pipeline_on_synthetic_data(tmp_path, backe
         assert pd.Timestamp(production["calibration_start"]) > pd.Timestamp(result["report"]["folds"][-1]["test_start"])
         assert pd.Timestamp(production["end"]) == as_of
         assert (result["folder"] / "test_metrics.csv").exists()
+        assert (result["folder"] / "model_statistics.html").exists()
+        assert (result["folder"] / "model_statistics.json").exists()
         output = predict(forecasts, observations, as_of, tmp_path / "models", tmp_path / "output.csv", log=lambda _: None)
     assert len(output) == 192 and output.groupby("lokalizacja").size().tolist() == [96, 96]
     assert output.skorygowana_predkoscWiatru.ge(0).all()

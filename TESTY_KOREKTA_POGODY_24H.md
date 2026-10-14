@@ -1,12 +1,21 @@
 # Sprawdzenie pakietu korekty pogody v2
 
-Weryfikacja lokalna 14 października 2026 r.: **40 testów przeszło bez ostrzeżeń**.
+Weryfikacja lokalna 14 października 2026 r.: **52 testy przeszły bez ostrzeżeń**.
 Pełny przepływ uczenia i predykcji sprawdzono dla XGBoost oraz
 HistGradientBoosting. Sprawdzono również skrypty CLI, agregację 10 → 15 minut,
 kierunek przy granicy 0/360°, dostępność danych, opóźnione odczyty, zmiany czasu,
 kompletność prognoz, zapis i odczyt modelu oraz ochronę aktywnej wersji.
 Publikowana wersja wymaga jawnej konfiguracji połączeń SQL; sprawdzono komunikat
 błędu przy braku zmiennych środowiskowych.
+
+Statystyki sprawdzono dla sparowanych prognoz, kołowego błędu kierunku,
+brakujących pomiarów i ciszy wiatru, stałych pomiarów, zerowego błędu bazowego,
+percentyli i RMSE łączonych z wielu testów oraz bloków dni w przedziale poprawy.
+Sprawdzono też odcięcie dostępności późniejszych pomiarów, usuwanie powtórzonych
+kopii prognoz, odrzucanie sprzecznych kopii i różnych wersji modelu oraz zapis
+raportów HTML/Markdown/JSON/CSV. Raport zachowuje w liczniku pokrycia kwadranse
+całkowicie pozbawione pomiarów. Strukturę tabel HTML sprawdzono parserem;
+nie wykonywano wizualnej oceny w przeglądarce.
 
 Nowe testy obejmują trajektorię tego samego otrzymanego wydania prognozy,
 zanik wpływu ostatniego błędu z wyprzedzeniem, połączenie kierunków na okręgu,
