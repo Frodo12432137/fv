@@ -7,6 +7,10 @@ parametrami: 96 kwadransów dla każdej z 19 skonfigurowanych farm.
 
 ## Uruchomienie na Windows
 
+Do sprawdzianu na późniejszym okresie użyj [instrukcji backtestu](JAK_ZROBIC_BACKTEST.md):
+osobno ustawiasz start/koniec uczenia oraz start/koniec oceny. Dostępny jest
+jeden zamrożony model i odtwarzanie codziennego ponownego uczenia.
+
 Do pracy w VS Code użyj [instrukcji startu strzałką i ustawiania dat](URUCHAMIANIE_VSCODE.md).
 Plik `start.py` korzysta z `ustawienia_uruchomienia.json`; poniższe polecenia
 pozostają dostępne do uruchamiania skryptów bezpośrednio i w harmonogramach.

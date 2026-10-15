@@ -1,0 +1,41 @@
+{
+  "tryb": "backtest",
+  "strefa_czasowa": "Europe/Warsaw",
+  "konfiguracja_modelu": "weather_config.example.json",
+  "artefakty": "weather_artifacts",
+  "dane": {
+    "prognozy_csv": null,
+    "pomiary_csv": null,
+    "separator_csv": ",",
+    "rodzaj": "measured"
+  },
+  "trening": {
+    "start": "2024-07-01T00:00:00+02:00",
+    "koniec": "2026-07-01T00:00:00+02:00",
+    "dni_walidacji": 21,
+    "dni_testu": 21,
+    "liczba_testow": 2
+  },
+  "backtest": {
+    "start": "2026-07-01T00:00:00+02:00",
+    "koniec": "2026-08-01T00:00:00+02:00",
+    "strategia": "staly",
+    "krok_godziny": 6,
+    "odswiezaj_model_co_dni": 1,
+    "pomiary_dostepne_do": null,
+    "katalog_wynikow": "weather_output/backtest"
+  },
+  "prognoza": {
+    "start": null,
+    "koniec": null,
+    "krok_godziny": 6,
+    "katalog_wynikow": "weather_output/prognozy"
+  },
+  "ocena": {
+    "start": null,
+    "koniec": null,
+    "pomiary_dostepne_do": null,
+    "pliki_prognoz": "weather_output/prognozy/*.csv",
+    "katalog_wynikow": "weather_output/evaluation"
+  }
+}

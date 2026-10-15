@@ -156,3 +156,24 @@ def test_evaluation_cli_handles_completed_and_pending_forecasts(cfg, tmp_path):
     assert main(args + ["--as-of", "2026-01-01T00:15:00Z"]) == 2
     assert main(args + ["--as-of", "2026-01-01T01:00:00Z"]) == 0
     assert (tmp_path / "report/model_statistics.html").exists()
+
+
+def test_date_window_filters_other_versions_and_future_snapshots_before_validation(cfg):
+    frame = snapshot()
+    outside = snapshot().iloc[[0]].copy()
+    outside["modelVersion"] = "future-model"
+    outside["czasPredykcjiUTC"] = "2026-02-01T00:00:00Z"
+    outside["dataGodzinaUTC"] = "2026-02-01T00:15:00Z"
+    selected, metadata = snapshot_samples(pd.concat([frame, outside]), observations(),
+        pd.Timestamp("2026-01-01T01:00:00Z"), cfg,
+        start=pd.Timestamp("2026-01-01T00:15:00Z"), end=pd.Timestamp("2026-01-01T00:30:00Z"))
+    assert len(selected) == 1 and metadata["model_version"] == "test-model"
+
+
+def test_evaluation_accepts_semicolon_observations_with_native_comma_predictions(cfg, tmp_path):
+    pred, obs, config = tmp_path / "pred.csv", tmp_path / "obs.csv", tmp_path / "cfg.json"
+    snapshot().to_csv(pred, index=False)
+    observations().to_csv(obs, index=False, sep=";")
+    config.write_text(json.dumps(cfg.to_dict()))
+    assert main(["--predictions-csv", str(pred), "--observation-csv", str(obs), "--config", str(config),
+                 "--csv-separator", ";", "--as-of", "2026-01-01T01:00:00Z", "--output", str(tmp_path / "report")]) == 0

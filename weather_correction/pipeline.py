@@ -8,12 +8,13 @@ import numpy as np
 import pandas as pd
 
 from .config import FARM_NAMES, Settings
-from .data import KEY, angle_diff, observation_targets, prepare_forecasts, prepare_observations, select_forecast_run
+from .data import KEY, angle_diff, select_forecast_run
 from .evaluation import build_assessment, test_samples
-from .features import build_features, lead_bucket, residual_history
+from .features import build_features, lead_bucket
 from .models import (TARGETS, candidate_predictions, choose_routes, fit_candidates, metric_report,
                      required_families, route_components, route_predictions, tune_families)
 from .storage import atomic_csv, load_bundle, save_bundle
+from .weather_data import PreparedWeather
 
 
 def chronological_split(rows: pd.DataFrame, as_of: pd.Timestamp, cfg: Settings, fold: int):
@@ -63,7 +64,8 @@ def select_methods(features, rows, train_mask, val_mask, validation_start, cfg, 
 
 
 def train(raw_forecasts: pd.DataFrame, raw_observations: pd.DataFrame, as_of: pd.Timestamp,
-          cfg: Settings, artifacts: Path, log=print, data_kind="unspecified", start: pd.Timestamp | None = None) -> dict:
+          cfg: Settings, artifacts: Path, log=print, data_kind="unspecified", start: pd.Timestamp | None = None,
+          prepared: PreparedWeather | None = None) -> dict:
     history_start = start if start is not None else as_of - pd.Timedelta(days=cfg.history_days)
     if pd.isna(history_start) or pd.isna(as_of) or history_start >= as_of:
         raise ValueError("Początek historii uczenia musi być wcześniejszy niż koniec.")
@@ -71,18 +73,13 @@ def train(raw_forecasts: pd.DataFrame, raw_observations: pd.DataFrame, as_of: pd
         cfg = replace(cfg, history_days=max(1, int((as_of - history_start).ceil("D").days)))
     log(f"Historia uczenia UTC: {history_start.isoformat()} – {as_of.isoformat()} (koniec wyłączny).")
     log("Przygotowanie wszystkich wydań prognoz i pomiarów.")
-    forecasts = prepare_forecasts(raw_forecasts, cfg)
-    time_drops_forecast = forecasts.attrs.get("dropped_timezone_rows", 0)
-    forecasts = forecasts.loc[forecasts.available_at <= as_of].reset_index(drop=True)
-    obs = prepare_observations(raw_observations, cfg)
-    time_drops_obs = obs.attrs.get("dropped_timezone_rows", 0)
-    # Etykiety i cechy nie zawierają obserwacji otrzymanych po czasie uczenia.
-    obs = obs.loc[obs.available_at <= as_of].reset_index(drop=True)
+    if prepared is None:
+        prepared = PreparedWeather.prepare(raw_forecasts, raw_observations, cfg)
+    forecasts, obs, targets, errors = prepared.known_at(as_of, cfg)
+    time_drops_forecast = prepared.dropped_forecast_times
+    time_drops_obs = prepared.dropped_observation_times
     if obs.empty:
         raise ValueError("Brak dostępnych pomiarów przed as_of.")
-    targets = observation_targets(obs, cfg)
-    targets = targets.loc[targets.label_available_at <= as_of].reset_index(drop=True)
-    errors = residual_history(forecasts, targets, cfg)
     eligible = forecasts.loc[(forecasts.available_at >= history_start) & (forecasts.available_at < as_of) &
         (forecasts.valid_at > forecasts.available_at) &
         ((forecasts.valid_at - forecasts.available_at) <= pd.Timedelta(hours=cfg.max_model_lead_hours))]
@@ -160,11 +157,11 @@ def train(raw_forecasts: pd.DataFrame, raw_observations: pd.DataFrame, as_of: pd
         "training_window": {"start_utc": history_start.isoformat(), "end_utc": as_of.isoformat()},
         "feature_columns": features.columns.tolist(),
         "published": publish, "folds": fold_reports, "publication_failures": failures,
-        "tuning": tuning_reports, "model_version": "2.1.0", "data_kind": data_kind,
+        "tuning": tuning_reports, "model_version": "2.2.0", "data_kind": data_kind,
         "production_selection": {**production_periods, "end": as_of.isoformat(), "profiles": production_tuning},
         "assessment": "Trening → strojenie profili → oddzielna kalibracja korekt/zespołów → niezależny test. Stabilność korekt sprawdzana blokami dni. Pakiet produkcyjny ponownie uczony na całej dostępnej historii.",
-        "quality": {"raw_forecast_rows": len(raw_forecasts), "prepared_forecast_rows": len(forecasts),
-            "raw_observation_rows": len(raw_observations), "native_observation_rows": len(obs),
+        "quality": {"raw_forecast_rows": prepared.raw_forecast_rows, "prepared_forecast_rows": len(forecasts),
+            "raw_observation_rows": prepared.raw_observation_rows, "native_observation_rows": len(obs),
             "quarter_targets": len(targets), "training_rows": len(rows),
             "ambiguous_forecast_time_rows_dropped": time_drops_forecast,
             "ambiguous_observation_time_rows_dropped": time_drops_obs,
@@ -192,7 +189,7 @@ def train(raw_forecasts: pd.DataFrame, raw_observations: pd.DataFrame, as_of: pd
 
 
 def predict(raw_forecasts: pd.DataFrame, raw_observations: pd.DataFrame, as_of: pd.Timestamp,
-            artifacts: Path, output: Path, log=print) -> pd.DataFrame:
+            artifacts: Path, output: Path, log=print, prepared: PreparedWeather | None = None) -> pd.DataFrame:
     bundle, version = load_bundle(artifacts)
     settings = dict(bundle["settings"])
     settings.setdefault("feature_version", 1)
@@ -200,15 +197,11 @@ def predict(raw_forecasts: pd.DataFrame, raw_observations: pd.DataFrame, as_of: 
     cfg = Settings(**settings)
     if as_of < pd.Timestamp(bundle["trained_as_of"]):
         raise ValueError("Model powstał po as_of. Takie uruchomienie byłoby niepoprawnym testem historycznym.")
-    forecasts = prepare_forecasts(raw_forecasts, cfg)
-    forecasts = forecasts.loc[forecasts.available_at <= as_of].reset_index(drop=True)
-    obs = prepare_observations(raw_observations, cfg)
-    obs = obs.loc[obs.available_at <= as_of].reset_index(drop=True)
+    if prepared is None:
+        prepared = PreparedWeather.prepare(raw_forecasts, raw_observations, cfg)
+    forecasts, obs, targets, errors = prepared.known_at(as_of, cfg, recent=True)
     if obs.empty:
         raise ValueError("Brak dostępnych pomiarów; sprawdź pobranie wykonania.")
-    targets = observation_targets(obs, cfg)
-    targets = targets.loc[targets.label_available_at <= as_of]
-    errors = residual_history(forecasts, targets, cfg)
     rows = select_forecast_run(forecasts, as_of, cfg)
     features = build_features(rows, obs, errors, cfg, forecast_context=forecasts)
     predictions = candidate_predictions(bundle["models"], features, rows, cfg)

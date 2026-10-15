@@ -2,6 +2,16 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Pogoda: backtest historyczny (daty w przykładzie)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/start.py",
+      "args": ["--settings", "${workspaceFolder}/ustawienia_backtest.example.json"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
       "name": "Pogoda: start według ustawień",
       "type": "debugpy",
       "request": "launch",

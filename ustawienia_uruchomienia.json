@@ -22,6 +22,15 @@
     "krok_godziny": 6,
     "katalog_wynikow": "weather_output/prognozy"
   },
+  "backtest": {
+    "start": null,
+    "koniec": null,
+    "strategia": "staly",
+    "krok_godziny": 6,
+    "odswiezaj_model_co_dni": 1,
+    "pomiary_dostepne_do": null,
+    "katalog_wynikow": "weather_output/backtest"
+  },
   "ocena": {
     "start": null,
     "koniec": null,

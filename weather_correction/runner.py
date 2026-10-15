@@ -14,21 +14,27 @@ import pandas as pd
 from .cli import predict_main, train_main
 from .config import Settings
 from .data import utc_time
+from .backtest import BacktestSpec
 
 
 ROOT = Path(__file__).resolve().parent.parent
-MODES = ("trening_i_prognoza", "trening", "prognoza", "ocena")
+MODES = ("trening_i_prognoza", "trening", "prognoza", "ocena", "backtest")
+BACKTEST_DEFAULTS = {"start": None, "koniec": None, "strategia": "staly", "krok_godziny": 6,
+                     "odswiezaj_model_co_dni": 1, "pomiary_dostepne_do": None,
+                     "katalog_wynikow": "weather_output/backtest"}
 
 
 def build_commands(settings_path: Path, mode: str | None = None, now=None) -> list[tuple[str, list[str]]]:
     """Sprawdź całą konfigurację przed uczeniem lub zapisem wyników."""
     data = json.loads(settings_path.read_text(encoding="utf-8-sig"))
+    data.setdefault("backtest", dict(BACKTEST_DEFAULTS))
     sections = {
-        "": {"tryb", "strefa_czasowa", "konfiguracja_modelu", "artefakty", "dane", "trening", "prognoza", "ocena"},
+        "": {"tryb", "strefa_czasowa", "konfiguracja_modelu", "artefakty", "dane", "trening", "prognoza", "ocena", "backtest"},
         "dane": {"prognozy_csv", "pomiary_csv", "separator_csv", "rodzaj"},
         "trening": {"start", "koniec", "dni_walidacji", "dni_testu", "liczba_testow"},
         "prognoza": {"start", "koniec", "krok_godziny", "katalog_wynikow"},
         "ocena": {"start", "koniec", "pomiary_dostepne_do", "pliki_prognoz", "katalog_wynikow"},
+        "backtest": set(BACKTEST_DEFAULTS),
     }
     for section, keys in sections.items():
         values = data if not section else data.get(section)
@@ -149,6 +155,39 @@ def build_commands(settings_path: Path, mode: str | None = None, now=None) -> li
             if value is not None:
                 args += [flag, value.isoformat()]
         commands.append(("ocena", args))
+    if mode == "backtest":
+        training, backtest = data["trening"], data["backtest"]
+        start = stamp(backtest["start"], "backtest.start")
+        training_end = stamp(training["koniec"], "trening.koniec")
+        if start is None:
+            start = training_end
+        if start is None:
+            raise ValueError("Ustaw backtest.start albo trening.koniec — to początek niezależnego sprawdzianu.")
+        end = stamp(backtest["koniec"], "backtest.koniec")
+        if end is None:
+            raise ValueError("Ustaw backtest.koniec — ostatnią granicę ocenianego okresu.")
+        training_end = training_end if training_end is not None else start
+        model_config = input_path(data["konfiguracja_modelu"])
+        for key in ("dni_walidacji", "dni_testu", "liczba_testow"):
+            if type(training[key]) is not int or training[key] <= 0:
+                raise ValueError(f"trening.{key} musi być dodatnią liczbą całkowitą.")
+        cfg = replace(Settings.load(model_config), validation_days=training["dni_walidacji"],
+                      test_days=training["dni_testu"], backtest_folds=training["liczba_testow"])
+        history_start = stamp(training["start"], "trening.start")
+        if history_start is None:
+            history_start = training_end - pd.Timedelta(days=cfg.history_days)
+        assessment_as_of = stamp(backtest["pomiary_dostepne_do"], "backtest.pomiary_dostepne_do")
+        spec = BacktestSpec(history_start, training_end, start, end,
+            assessment_as_of if assessment_as_of is not None else now, backtest["strategia"],
+            backtest["krok_godziny"], backtest["odswiezaj_model_co_dni"])
+        spec.validate(cfg)
+        args = common[2:] + ["--config", model_config, "--training-start", history_start.isoformat(),
+            "--training-end", training_end.isoformat(), "--start", start.isoformat(), "--end", end.isoformat(),
+            "--strategy", spec.strategy, "--step-hours", str(spec.step_hours), "--retrain-days", str(spec.retrain_days),
+            "--assessment-as-of", spec.assessment_as_of.isoformat(), "--output", str(path(backtest["katalog_wynikow"])),
+            "--validation-days", str(cfg.validation_days), "--test-days", str(cfg.test_days),
+            "--backtest-folds", str(cfg.backtest_folds), "--data-kind", source["rodzaj"]]
+        commands.append(("backtest", args))
     return commands
 
 
@@ -161,15 +200,20 @@ def main(argv=None) -> int:
     try:
         commands = build_commands(args.settings, args.mode)
         print(f"Ustawienia: {args.settings.resolve()}", flush=True)
-        for mode in ("trening", "prognoza", "ocena"):
+        for mode in MODES:
             count = sum(kind == mode for kind, _ in commands)
             if count:
                 print(f"Plan: {mode}, liczba uruchomień: {count}.", flush=True)
         if args.check:
+            for mode, command_args in commands:
+                if mode == "backtest":
+                    from backtest_pogody import main as check_backtest
+                    return check_backtest(command_args + ["--check"])
             print("Ustawienia poprawne. Dostęp do danych i modelu jest sprawdzany przy właściwym uruchomieniu.")
             return 0
         from ocen_prognoze_pogody import main as evaluate_main
-        handlers = {"trening": train_main, "prognoza": predict_main, "ocena": evaluate_main}
+        from backtest_pogody import main as backtest_main
+        handlers = {"trening": train_main, "prognoza": predict_main, "ocena": evaluate_main, "backtest": backtest_main}
         for index, (mode, command_args) in enumerate(commands, 1):
             print(f"\n[{index}/{len(commands)}] {mode}", flush=True)
             code = handlers[mode](command_args)

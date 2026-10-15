@@ -1,5 +1,9 @@
 # Statystyki oceny modelu
 
+Do wyuczenia modelu na jednym okresie i sprawdzenia go na późniejszych danych
+użyj [backtestu z czterema datami](JAK_ZROBIC_BACKTEST.md). Test kroczący
+odtwarza także codzienne uczenie i zachowuje wersję modelu każdego uruchomienia.
+
 Każdy trening zapisuje raport oceny w katalogu `weather_artifacts/model-.../`:
 
 - `model_statistics.html` — raport do otwarcia w przeglądarce;
@@ -84,13 +88,20 @@ Po nadejściu pomiarów uruchom:
 `--config` musi odpowiadać konfiguracji treningu zapisanej prognozy, w tym
 znaczeniu i opóźnieniu pomiarów. `pomiary.csv` ma taki sam format, jak wejście
 pomiarów do treningu. Możesz podać `--as-of` z offsetem, aby ocenić tylko
-pomiary dostępne do konkretnej chwili, oraz `--csv-separator ";"` dla plików
-z takim separatorem.
+pomiary dostępne do konkretnej chwili. `--csv-separator ";"` ustawia separator
+pomiarów; oryginalne pliki predykcji programu są zawsze czytane z przecinkiem.
+Dla predykcji przekonwertowanych do innego separatora podaj osobno
+`--predictions-separator ";"`.
 
 Skrypt dołącza rzeczywiste pomiary po farmie i kwadransie w UTC. Identyczne
 kopie tych samych prognoz usuwa z liczników. Sprzeczne kopie albo różne
 `modelVersion` w jednym zestawie są błędem: wersje należy oceniać osobno.
 Pomiary przyszłe lub dostarczone po `as-of` nie wchodzą do oceny.
+Filtr `--start`/`--end` jest stosowany przed sprawdzaniem wersji i czasu
+predykcji, więc inny model albo późniejsza prognoza poza wybranym okresem
+nie blokują oceny tego okresu. W samym wybranym okresie nadal oceniaj jedną
+wersję naraz; backtest kroczący łączy własne kolejne wersje jako wynik jednej
+procedury uczenia i daje też osobne statystyki dla każdej wersji.
 
 Kod zakończenia: `0` raport z ocenionymi pomiarami, `1` błąd danych lub
 konfiguracji, `2` raport powstał, ale nie ma jeszcze żadnych poprawnych

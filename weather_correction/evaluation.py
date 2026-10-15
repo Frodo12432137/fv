@@ -41,7 +41,7 @@ def test_samples(rows, corrected, fold, forecast_grid=None):
     return result.reset_index(drop=True)
 
 
-def snapshot_samples(output, observations, as_of, cfg):
+def snapshot_samples(output, observations, as_of, cfg, start=None, end=None, prepared_targets=None):
     names = {"lokalizacja": "farm", "dataGodzinaUTC": "valid_at", "czasPredykcjiUTC": "forecast_at",
              "czasDostepnosciUTC": "available_at", "modelVersion": "model_version",
              "predkoscWiatru": "raw_speed", "skorygowana_predkoscWiatru": "corrected_speed",
@@ -51,8 +51,16 @@ def snapshot_samples(output, observations, as_of, cfg):
     if missing:
         raise ValueError(f"Brak kolumn zapisanej predykcji: {sorted(missing)}.")
     rows = output[list(names)].rename(columns=names).copy()
+    if start is not None or end is not None:
+        valid_times = pd.to_datetime(rows.valid_at, utc=True, errors="raise")
+        keep = pd.Series(True, index=rows.index)
+        if start is not None:
+            keep &= valid_times >= start
+        if end is not None:
+            keep &= valid_times < end
+        rows = rows.loc[keep].copy()
     if rows.empty:
-        raise ValueError("Plik predykcji jest pusty.")
+        raise ValueError("Brak prognoz w wybranym okresie oceny albo pusty plik predykcji.")
     if rows.model_version.isna().any() or rows.model_version.nunique() != 1:
         raise ValueError("Oceniaj jedną wersję modelu na raz; pliki mają różne modelVersion.")
     rows["farm"] = rows.farm.map(lambda value: ALIASES.get(name_key(value)))
@@ -80,16 +88,21 @@ def snapshot_samples(output, observations, as_of, cfg):
     key = ["farm", "forecast_at", "valid_at"]
     if rows.duplicated(key).any():
         raise ValueError("Sprzeczne predykcje dla tej samej farmy, chwili predykcji i kwadransa.")
-    obs = prepare_observations(observations, cfg)
-    obs = obs.loc[obs.available_at <= as_of]
-    targets = observation_targets(obs, cfg)
+    if prepared_targets is None:
+        obs = prepare_observations(observations, cfg)
+        obs = obs.loc[obs.available_at <= as_of]
+        targets = observation_targets(obs, cfg)
+    else:
+        targets = prepared_targets
     targets = targets.loc[targets.label_available_at <= as_of]
     targets = targets[["farm", "valid_at", *TARGETS]].rename(columns={t: f"actual_{t}" for t in TARGETS})
     rows = rows.merge(targets, on=["farm", "valid_at"], how="left", validate="many_to_one")
     rows["lead_hours"] = (rows.valid_at - rows.available_at).dt.total_seconds() / 3600
     rows["fold"] = "saved_forecasts"
     return rows, {"model_version": str(rows.model_version.iloc[0]), "duplicates_removed": before - len(rows),
-                  "evaluation_as_of": as_of.isoformat()}
+                  "evaluation_as_of": as_of.isoformat(),
+                  "evaluation_window": {"start_utc": start.isoformat() if start is not None else None,
+                                        "end_utc": end.isoformat() if end is not None else None}}
 
 
 def detailed_metrics(actual, predicted, angular):
@@ -253,6 +266,15 @@ def report_intro(assessment):
         lines.append("Bramka publikacji: " + ("zaliczona." if meta["published"] else "kandydat odrzucony."))
     if meta.get("note"):
         lines.append(str(meta["note"]))
+    if "backtest" in meta:
+        spec = meta["backtest"]
+        lines.append(f"Dane pierwszego uczenia: {spec['training_start']} – {spec['training_end']}. "
+                     f"Okres backtestu: {spec['start']} – {spec['end']} (koniec wyłączny). "
+                     f"Strategia: {spec['strategy']}; krok uruchomień: {spec['step_hours']} h.")
+    if "generation_coverage_pct" in meta:
+        lines.append(f"Pokrycie generowania prognoz: {number(meta['generation_coverage_pct'])}%. "
+                     f"Nieudane uruchomienia: {meta['failed_prediction_jobs']}. "
+                     "Pokrycie pomiarów w tabelach dotyczy wygenerowanych prognoz.")
     if not any(r["rows"] for r in assessment["metrics"]):
         lines.append("Brak dostępnych poprawnych pomiarów do oceny. Nie można jeszcze stwierdzić skuteczności korekty.")
     return lines

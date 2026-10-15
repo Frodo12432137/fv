@@ -1,6 +1,6 @@
 # Sprawdzenie pakietu korekty pogody v2
 
-Weryfikacja lokalna 14 października 2026 r.: **52 testy przeszły bez ostrzeżeń**.
+Weryfikacja lokalna 15 października 2026 r.: **90 testów przeszło bez ostrzeżeń**.
 Pełny przepływ uczenia i predykcji sprawdzono dla XGBoost oraz
 HistGradientBoosting. Sprawdzono również skrypty CLI, agregację 10 → 15 minut,
 kierunek przy granicy 0/360°, dostępność danych, opóźnione odczyty, zmiany czasu,
@@ -16,6 +16,30 @@ kopii prognoz, odrzucanie sprzecznych kopii i różnych wersji modelu oraz zapis
 raportów HTML/Markdown/JSON/CSV. Raport zachowuje w liczniku pokrycia kwadranse
 całkowicie pozbawione pomiarów. Strukturę tabel HTML sprawdzono parserem;
 nie wykonywano wizualnej oceny w przeglądarce.
+
+## Backtest z datami — wersja 2.2
+
+Sprawdzono osobne okresy uczenia i sprawdzianu, odrzucanie nakładających się
+dat przed odczytem danych, jeden model zamrożony i codzienne ponowne uczenie.
+Test modyfikujący pomiary otrzymane dopiero po odcięciu uczenia potwierdza,
+że pierwsza prognoza nie zmienia się pod wpływem tych przyszłych danych.
+Przygotowane wcześniej dane są każdorazowo odcinane według dostępności;
+etykiety powstają z pomiarów znanych w danym historycznym uruchomieniu.
+
+Sprawdzono odrzucone ponowne uczenie z zachowaniem poprzedniego modelu,
+zatrzymanie przy braku zaakceptowanego pierwszego modelu, raportowanie
+niepełnych wydań prognoz i osobne pokrycie generowania wyników. Katalog
+backtestu nie zmienia wskaźnika modelu produkcyjnego.
+
+Pełne uruchomienie `start.py` na danych syntetycznych odtworzyło osiem dni:
+osiem uczeń, 32 prognozy co sześć godzin oraz ocenę 2924 prognozowanych
+kwadransów na parametr. Ograniczenie końca okresu usuwa z oceny późniejsze
+kwadranse ostatnich prognoz. Przykład w `examples/backtest_synthetic/`
+zawiera raport i dzienniki, bez danych firmowych i wyuczonych artefaktów.
+
+Poprawiono też ocenę z filtrem dat przed walidacją wersji oraz osobne
+separatory pomiarów i wynikowych prognoz CSV. Zachowano obsługę wcześniejszych
+plików ustawień, które nie mają sekcji backtestu.
 
 Nowe testy obejmują trajektorię tego samego otrzymanego wydania prognozy,
 zanik wpływu ostatniego błędu z wyprzedzeniem, połączenie kierunków na okręgu,

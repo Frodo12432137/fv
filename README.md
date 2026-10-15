@@ -11,6 +11,13 @@ a cechy zawierają tylko dane dostępne przy otrzymaniu prognozy.
 
 ## Uruchomienie
 
+**Backtest z wyborem początku i końca danych:** otwórz
+[`ustawienia_backtest.example.json`](ustawienia_backtest.example.json).
+Przykład uczy na okresie 2024-07-01–2026-07-01 i sprawdza prognozy na
+2026-07-01–2026-08-01. W VS Code wybierz profil backtestu albo uruchom
+`python start.py --settings ustawienia_backtest.example.json`.
+[Instrukcja wyboru dat, strategii i odczytu błędów](JAK_ZROBIC_BACKTEST.md).
+
 **VS Code:** otwórz folder repozytorium, przygotuj środowisko według poleceń
 poniżej i wybierz je przez `Python: Select Interpreter` → `.venv`.
 Zainstaluj polecane rozszerzenia Python i Python Debugger.
@@ -62,6 +69,8 @@ prognozy. Harmonogram jobów Jenkins ustawiany jest poza tym pakietem.
 - [Pełna instrukcja, format danych i założenia czasu](START_KOREKTA_POGODY_24H.md)
 - [Raport testów i ograniczenia oceny](TESTY_KOREKTA_POGODY_24H.md)
 - [Statystyki modelu i ocena zapisanych prognoz](STATYSTYKI_MODELU.md)
+- [Backtest jednego modelu i codziennego uczenia](JAK_ZROBIC_BACKTEST.md)
+- [Przykładowy wynik backtestu kroczącego — dane syntetyczne](examples/backtest_synthetic/BACKTEST.md)
 - [Przykładowy raport statystyk — dane syntetyczne](examples/statistics/synthetic_backtest/model_statistics.md)
 - [Porównanie v1 i v2 na danych syntetycznych](BENCHMARK_KOREKTA_POGODY_V2.csv)
 

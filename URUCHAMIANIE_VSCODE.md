@@ -19,7 +19,9 @@
 
 F5 uruchamia debugger, Ctrl+F5 startuje bez debugowania. Panel „Uruchamianie
 i debugowanie” ma też profile samego treningu, samych prognoz i oceny.
-Profile nadpisują wyłącznie `tryb`, pozostałe ustawienia pochodzą z tego samego pliku.
+Profile treningu, prognoz i oceny nadpisują wyłącznie `tryb`. Profil backtestu
+korzysta z osobnego `ustawienia_backtest.example.json`, z datami uczenia i oceny.
+Szczegóły są w [instrukcji backtestu](JAK_ZROBIC_BACKTEST.md).
 
 ## Jedno miejsce na daty
 
@@ -85,7 +87,7 @@ Tryb łączony zatrzymuje się, jeżeli nowy model nie przejdzie oceny jakości.
 
 ## Tryb i dane
 
-`tryb` przyjmuje `"trening_i_prognoza"`, `"trening"`, `"prognoza"` albo `"ocena"`.
+`tryb` przyjmuje `"trening_i_prognoza"`, `"trening"`, `"prognoza"`, `"ocena"` albo `"backtest"`.
 Do samej prognozy potrzebny jest wcześniej opublikowany model w `artefakty`.
 Parametry samego modelu, farmy i opóźnienia danych ustala `konfiguracja_modelu`.
 
@@ -113,6 +115,8 @@ Raport powstaje w `ocena.katalog_wynikow`.
 .\.venv\Scripts\python.exe start.py --mode trening
 .\.venv\Scripts\python.exe start.py --mode prognoza
 .\.venv\Scripts\python.exe start.py --mode ocena
+.\.venv\Scripts\python.exe start.py --settings ustawienia_backtest.example.json --check
+.\.venv\Scripts\python.exe start.py --settings ustawienia_backtest.example.json
 ```
 
 `--check` sprawdza ustawienia, zakresy i wskazane pliki, bez treningu i połączenia

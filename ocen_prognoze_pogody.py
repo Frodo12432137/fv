@@ -23,6 +23,7 @@ def main(argv=None):
     parser.add_argument("--end", help="Koniec ocenianych kwadransów (wyłącznie).")
     parser.add_argument("--output", type=Path, default=Path("weather_output/evaluation"))
     parser.add_argument("--csv-separator", default=",")
+    parser.add_argument("--predictions-separator", default=",", help="Separator plików wynikowych; program zapisuje je z przecinkiem.")
     parser.add_argument("--data-kind", choices=["unspecified", "measured", "synthetic"], default="unspecified")
     args = parser.parse_args(argv)
     try:
@@ -34,17 +35,9 @@ def main(argv=None):
             raise ValueError("Niepoprawna data oceny.")
         if start is not None and end is not None and start >= end:
             raise ValueError("Początek oceny musi być wcześniejszy niż koniec.")
-        output = pd.concat([pd.read_csv(path, sep=args.csv_separator, encoding="utf-8-sig") for path in args.predictions_csv], ignore_index=True)
+        output = pd.concat([pd.read_csv(path, sep=args.predictions_separator, encoding="utf-8-sig") for path in args.predictions_csv], ignore_index=True)
         observations = pd.read_csv(args.observation_csv, sep=args.csv_separator, encoding="utf-8-sig")
-        samples, metadata = snapshot_samples(output, observations, as_of, cfg)
-        if start is not None:
-            samples = samples.loc[samples.valid_at >= start]
-        if end is not None:
-            samples = samples.loc[samples.valid_at < end]
-        if samples.empty:
-            raise ValueError("Brak prognoz w wybranym okresie oceny.")
-        metadata["evaluation_window"] = {"start_utc": start.isoformat() if start is not None else None,
-                                         "end_utc": end.isoformat() if end is not None else None}
+        samples, metadata = snapshot_samples(output, observations, as_of, cfg, start=start, end=end)
         assessment = build_assessment(samples, cfg, {**metadata, "data_kind": args.data_kind,
             "assessment_type": "Ocena zapisanych prognoz po nadejściu wykonania", "prediction_files": [p.name for p in args.predictions_csv]})
         save_assessment(args.output, assessment)

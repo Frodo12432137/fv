@@ -1,0 +1,92 @@
+<!doctype html><html lang="pl"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Statystyki oceny modelu</title><style>body{font:15px system-ui,sans-serif;color:#172b40;background:#f5f7fa;margin:0;padding:24px}main{max-width:1440px;margin:auto}h1{font-size:28px}h2{font-size:19px}section{background:white;border:1px solid #dae2ec;border-radius:10px;padding:16px;margin:16px 0}.scroll{overflow:auto}table{border-collapse:collapse;width:100%;white-space:nowrap;font-size:13px}th,td{text-align:right;padding:9px;border-bottom:1px solid #e3e8ee}th{background:#edf2f8}td:first-child,th:first-child{text-align:left}.kind{font-weight:700;color:#9c4a08}p{line-height:1.6}summary{cursor:pointer;font-weight:650}footer{line-height:1.6}@media(max-width:600px){body{padding:10px}}</style><main><h1>Statystyki oceny modelu</h1>
+<p class="kind">DANE SYNTETYCZNE — nie jest to ocena farm PGE</p>
+<p class="">Backtest historyczny: kroczacy</p>
+<p class="">Wersja: Kolejne wersje tej samej procedury uczenia</p>
+<p class="">Prognozy od 2026-02-02T00:00:00+00:00 do 2026-02-09T18:00:00+00:00. Wiersze prognoz: 2924.</p>
+<p class="">Dodatnia poprawa oznacza mniejszy błąd korekty. Wartości — oznaczają brak danych lub niezdefiniowaną miarę.</p>
+<p class="">Ocena obejmuje wyłącznie prognozowane kwadranse w wybranym okresie backtestu. Modele nie znają przyszłych pomiarów; późniejsze wykonanie służy wyłącznie ocenie. Błędy liczymy dla udanych prognoz, a brakujące uruchomienia osobno w prediction_runs.csv. Ponowne uczenie jest symulowane w chwili odcięcia danych, bez modelowania czasu obliczeń.</p>
+<p class="">Dane pierwszego uczenia: 2026-01-01T00:00:00+00:00 – 2026-02-02T00:00:00+00:00. Okres backtestu: 2026-02-02T00:00:00+00:00 – 2026-02-10T00:00:00+00:00 (koniec wyłączny). Strategia: kroczacy; krok uruchomień: 6 h.</p>
+<p class="">Pokrycie generowania prognoz: 100.000%. Nieudane uruchomienia: 0. Pokrycie pomiarów w tabelach dotyczy wygenerowanych prognoz.</p>
+<section><h2>Wynik łączny</h2>
+<div class="scroll"><table><thead><tr><th>Farma</th><th>Horyzont</th><th>Parametr</th><th>Jednostka</th><th>N</th><th>MAE surowe</th><th>MAE korekty</th><th>Poprawa %</th><th>RMSE korekty</th><th>Bias korekty</th><th>P95 korekty</th></tr></thead><tbody>
+<tr><td>ALL</td><td>ALL</td><td>Prędkość wiatru</td><td>m/s</td><td>2924</td><td>1.257</td><td>0.030</td><td>97.633</td><td>0.038</td><td>0.007</td><td>0.075</td></tr>
+<tr><td>ALL</td><td>ALL</td><td>Temperatura</td><td>°C</td><td>2924</td><td>1.201</td><td>0.019</td><td>98.383</td><td>0.024</td><td>0.001</td><td>0.047</td></tr>
+<tr><td>ALL</td><td>ALL</td><td>Kierunek wiatru</td><td>°</td><td>2924</td><td>12.001</td><td>0.184</td><td>98.467</td><td>0.232</td><td>-0.003</td><td>0.451</td></tr>
+</tbody></table></div></section>
+<section><h2>Pokrycie, stabilność i duże błędy</h2>
+<div class="scroll"><table><thead><tr><th>Parametr</th><th>Pokrycie %</th><th>Brak pomiaru</th><th>Cisza wiatru</th><th>Lepsze wiersze %</th><th>Lepsze dni %</th><th>P99 korekty</th><th>Max korekty</th><th>95% CI poprawy MAE</th></tr></thead><tbody>
+<tr><td>Prędkość wiatru</td><td>100.000</td><td>0</td><td>0</td><td>100.000</td><td>100.000</td><td>0.098</td><td>0.123</td><td>1.084 … 1.384 m/s</td></tr>
+<tr><td>Temperatura</td><td>100.000</td><td>0</td><td>0</td><td>100.000</td><td>100.000</td><td>0.060</td><td>0.075</td><td>1.180 … 1.183 °C</td></tr>
+<tr><td>Kierunek wiatru</td><td>100.000</td><td>0</td><td>0</td><td>100.000</td><td>100.000</td><td>0.624</td><td>0.852</td><td>11.795 … 11.842 °</td></tr>
+</tbody></table></div></section>
+<section><h2>Według farmy</h2>
+<div class="scroll"><table><thead><tr><th>Farma</th><th>Horyzont</th><th>Parametr</th><th>Jednostka</th><th>N</th><th>MAE surowe</th><th>MAE korekty</th><th>Poprawa %</th><th>RMSE korekty</th><th>Bias korekty</th><th>P95 korekty</th></tr></thead><tbody>
+<tr><td>GAL</td><td>ALL</td><td>Prędkość wiatru</td><td>m/s</td><td>2924</td><td>1.257</td><td>0.030</td><td>97.633</td><td>0.038</td><td>0.007</td><td>0.075</td></tr>
+<tr><td>GAL</td><td>ALL</td><td>Temperatura</td><td>°C</td><td>2924</td><td>1.201</td><td>0.019</td><td>98.383</td><td>0.024</td><td>0.001</td><td>0.047</td></tr>
+<tr><td>GAL</td><td>ALL</td><td>Kierunek wiatru</td><td>°</td><td>2924</td><td>12.001</td><td>0.184</td><td>98.467</td><td>0.232</td><td>-0.003</td><td>0.451</td></tr>
+</tbody></table></div></section>
+<section><h2>Według wyprzedzenia prognozy</h2>
+<div class="scroll"><table><thead><tr><th>Farma</th><th>Horyzont</th><th>Parametr</th><th>Jednostka</th><th>N</th><th>MAE surowe</th><th>MAE korekty</th><th>Poprawa %</th><th>RMSE korekty</th><th>Bias korekty</th><th>P95 korekty</th></tr></thead><tbody>
+<tr><td>ALL</td><td>0-3h</td><td>Prędkość wiatru</td><td>m/s</td><td>384</td><td>1.243</td><td>0.032</td><td>97.400</td><td>0.041</td><td>0.003</td><td>0.082</td></tr>
+<tr><td>ALL</td><td>0-3h</td><td>Temperatura</td><td>°C</td><td>384</td><td>1.201</td><td>0.019</td><td>98.459</td><td>0.023</td><td>0.001</td><td>0.046</td></tr>
+<tr><td>ALL</td><td>0-3h</td><td>Kierunek wiatru</td><td>°</td><td>384</td><td>12.002</td><td>0.182</td><td>98.484</td><td>0.231</td><td>-0.000</td><td>0.485</td></tr>
+<tr><td>ALL</td><td>3-6h</td><td>Prędkość wiatru</td><td>m/s</td><td>383</td><td>1.244</td><td>0.027</td><td>97.812</td><td>0.034</td><td>0.002</td><td>0.069</td></tr>
+<tr><td>ALL</td><td>3-6h</td><td>Temperatura</td><td>°C</td><td>383</td><td>1.201</td><td>0.020</td><td>98.330</td><td>0.025</td><td>0.001</td><td>0.048</td></tr>
+<tr><td>ALL</td><td>3-6h</td><td>Kierunek wiatru</td><td>°</td><td>383</td><td>11.999</td><td>0.185</td><td>98.457</td><td>0.231</td><td>-0.004</td><td>0.439</td></tr>
+<tr><td>ALL</td><td>6-12h</td><td>Prędkość wiatru</td><td>m/s</td><td>743</td><td>1.253</td><td>0.029</td><td>97.665</td><td>0.037</td><td>0.006</td><td>0.075</td></tr>
+<tr><td>ALL</td><td>6-12h</td><td>Temperatura</td><td>°C</td><td>743</td><td>1.201</td><td>0.019</td><td>98.400</td><td>0.024</td><td>0.000</td><td>0.047</td></tr>
+<tr><td>ALL</td><td>6-12h</td><td>Kierunek wiatru</td><td>°</td><td>743</td><td>12.001</td><td>0.182</td><td>98.480</td><td>0.230</td><td>-0.006</td><td>0.446</td></tr>
+<tr><td>ALL</td><td>12-24h</td><td>Prędkość wiatru</td><td>m/s</td><td>1414</td><td>1.267</td><td>0.030</td><td>97.631</td><td>0.038</td><td>0.011</td><td>0.075</td></tr>
+<tr><td>ALL</td><td>12-24h</td><td>Temperatura</td><td>°C</td><td>1414</td><td>1.201</td><td>0.020</td><td>98.368</td><td>0.024</td><td>0.001</td><td>0.048</td></tr>
+<tr><td>ALL</td><td>12-24h</td><td>Kierunek wiatru</td><td>°</td><td>1414</td><td>12.002</td><td>0.185</td><td>98.458</td><td>0.233</td><td>-0.003</td><td>0.452</td></tr>
+</tbody></table></div></section>
+<section><details><summary>Farma i wyprzedzenie</summary>
+<div class="scroll"><table><thead><tr><th>Farma</th><th>Horyzont</th><th>Parametr</th><th>Jednostka</th><th>N</th><th>MAE surowe</th><th>MAE korekty</th><th>Poprawa %</th><th>RMSE korekty</th><th>Bias korekty</th><th>P95 korekty</th></tr></thead><tbody>
+<tr><td>GAL</td><td>0-3h</td><td>Prędkość wiatru</td><td>m/s</td><td>384</td><td>1.243</td><td>0.032</td><td>97.400</td><td>0.041</td><td>0.003</td><td>0.082</td></tr>
+<tr><td>GAL</td><td>0-3h</td><td>Temperatura</td><td>°C</td><td>384</td><td>1.201</td><td>0.019</td><td>98.459</td><td>0.023</td><td>0.001</td><td>0.046</td></tr>
+<tr><td>GAL</td><td>0-3h</td><td>Kierunek wiatru</td><td>°</td><td>384</td><td>12.002</td><td>0.182</td><td>98.484</td><td>0.231</td><td>-0.000</td><td>0.485</td></tr>
+<tr><td>GAL</td><td>3-6h</td><td>Prędkość wiatru</td><td>m/s</td><td>383</td><td>1.244</td><td>0.027</td><td>97.812</td><td>0.034</td><td>0.002</td><td>0.069</td></tr>
+<tr><td>GAL</td><td>3-6h</td><td>Temperatura</td><td>°C</td><td>383</td><td>1.201</td><td>0.020</td><td>98.330</td><td>0.025</td><td>0.001</td><td>0.048</td></tr>
+<tr><td>GAL</td><td>3-6h</td><td>Kierunek wiatru</td><td>°</td><td>383</td><td>11.999</td><td>0.185</td><td>98.457</td><td>0.231</td><td>-0.004</td><td>0.439</td></tr>
+<tr><td>GAL</td><td>6-12h</td><td>Prędkość wiatru</td><td>m/s</td><td>743</td><td>1.253</td><td>0.029</td><td>97.665</td><td>0.037</td><td>0.006</td><td>0.075</td></tr>
+<tr><td>GAL</td><td>6-12h</td><td>Temperatura</td><td>°C</td><td>743</td><td>1.201</td><td>0.019</td><td>98.400</td><td>0.024</td><td>0.000</td><td>0.047</td></tr>
+<tr><td>GAL</td><td>6-12h</td><td>Kierunek wiatru</td><td>°</td><td>743</td><td>12.001</td><td>0.182</td><td>98.480</td><td>0.230</td><td>-0.006</td><td>0.446</td></tr>
+<tr><td>GAL</td><td>12-24h</td><td>Prędkość wiatru</td><td>m/s</td><td>1414</td><td>1.267</td><td>0.030</td><td>97.631</td><td>0.038</td><td>0.011</td><td>0.075</td></tr>
+<tr><td>GAL</td><td>12-24h</td><td>Temperatura</td><td>°C</td><td>1414</td><td>1.201</td><td>0.020</td><td>98.368</td><td>0.024</td><td>0.001</td><td>0.048</td></tr>
+<tr><td>GAL</td><td>12-24h</td><td>Kierunek wiatru</td><td>°</td><td>1414</td><td>12.002</td><td>0.185</td><td>98.458</td><td>0.233</td><td>-0.003</td><td>0.452</td></tr>
+</tbody></table></div></details></section>
+<section><details><summary>Test / zbiór: backtest</summary>
+<div class="scroll"><table><thead><tr><th>Farma</th><th>Horyzont</th><th>Parametr</th><th>Jednostka</th><th>N</th><th>MAE surowe</th><th>MAE korekty</th><th>Poprawa %</th><th>RMSE korekty</th><th>Bias korekty</th><th>P95 korekty</th></tr></thead><tbody>
+<tr><td>ALL</td><td>ALL</td><td>Prędkość wiatru</td><td>m/s</td><td>2924</td><td>1.257</td><td>0.030</td><td>97.633</td><td>0.038</td><td>0.007</td><td>0.075</td></tr>
+<tr><td>ALL</td><td>ALL</td><td>Temperatura</td><td>°C</td><td>2924</td><td>1.201</td><td>0.019</td><td>98.383</td><td>0.024</td><td>0.001</td><td>0.047</td></tr>
+<tr><td>ALL</td><td>ALL</td><td>Kierunek wiatru</td><td>°</td><td>2924</td><td>12.001</td><td>0.184</td><td>98.467</td><td>0.232</td><td>-0.003</td><td>0.451</td></tr>
+</tbody></table></div></details></section>
+<section><details><summary>Dzienna ocena</summary>
+<div class="scroll"><table><thead><tr><th>Dzień UTC</th><th>Parametr</th><th>N</th><th>MAE surowe</th><th>MAE korekty</th><th>Poprawa %</th></tr></thead><tbody>
+<tr><td>2026-02-02</td><td>Prędkość wiatru</td><td>384</td><td>1.003</td><td>0.031</td><td>96.898</td></tr>
+<tr><td>2026-02-02</td><td>Temperatura</td><td>384</td><td>1.201</td><td>0.018</td><td>98.462</td></tr>
+<tr><td>2026-02-02</td><td>Kierunek wiatru</td><td>384</td><td>12.011</td><td>0.167</td><td>98.610</td></tr>
+<tr><td>2026-02-03</td><td>Prędkość wiatru</td><td>384</td><td>1.061</td><td>0.027</td><td>97.408</td></tr>
+<tr><td>2026-02-03</td><td>Temperatura</td><td>384</td><td>1.206</td><td>0.021</td><td>98.267</td></tr>
+<tr><td>2026-02-03</td><td>Kierunek wiatru</td><td>384</td><td>12.046</td><td>0.186</td><td>98.454</td></tr>
+<tr><td>2026-02-04</td><td>Prędkość wiatru</td><td>384</td><td>1.158</td><td>0.030</td><td>97.410</td></tr>
+<tr><td>2026-02-04</td><td>Temperatura</td><td>384</td><td>1.197</td><td>0.021</td><td>98.265</td></tr>
+<tr><td>2026-02-04</td><td>Kierunek wiatru</td><td>384</td><td>12.013</td><td>0.181</td><td>98.490</td></tr>
+<tr><td>2026-02-05</td><td>Prędkość wiatru</td><td>384</td><td>1.301</td><td>0.036</td><td>97.246</td></tr>
+<tr><td>2026-02-05</td><td>Temperatura</td><td>384</td><td>1.204</td><td>0.020</td><td>98.366</td></tr>
+<tr><td>2026-02-05</td><td>Kierunek wiatru</td><td>384</td><td>12.002</td><td>0.186</td><td>98.452</td></tr>
+<tr><td>2026-02-06</td><td>Prędkość wiatru</td><td>384</td><td>1.361</td><td>0.031</td><td>97.701</td></tr>
+<tr><td>2026-02-06</td><td>Temperatura</td><td>384</td><td>1.200</td><td>0.017</td><td>98.565</td></tr>
+<tr><td>2026-02-06</td><td>Kierunek wiatru</td><td>384</td><td>11.980</td><td>0.176</td><td>98.533</td></tr>
+<tr><td>2026-02-07</td><td>Prędkość wiatru</td><td>384</td><td>1.449</td><td>0.027</td><td>98.105</td></tr>
+<tr><td>2026-02-07</td><td>Temperatura</td><td>384</td><td>1.201</td><td>0.019</td><td>98.392</td></tr>
+<tr><td>2026-02-07</td><td>Kierunek wiatru</td><td>384</td><td>11.994</td><td>0.196</td><td>98.366</td></tr>
+<tr><td>2026-02-08</td><td>Prędkość wiatru</td><td>384</td><td>1.428</td><td>0.026</td><td>98.177</td></tr>
+<tr><td>2026-02-08</td><td>Temperatura</td><td>384</td><td>1.199</td><td>0.020</td><td>98.347</td></tr>
+<tr><td>2026-02-08</td><td>Kierunek wiatru</td><td>384</td><td>11.987</td><td>0.191</td><td>98.408</td></tr>
+<tr><td>2026-02-09</td><td>Prędkość wiatru</td><td>236</td><td>1.323</td><td>0.028</td><td>97.864</td></tr>
+<tr><td>2026-02-09</td><td>Temperatura</td><td>236</td><td>1.199</td><td>0.019</td><td>98.415</td></tr>
+<tr><td>2026-02-09</td><td>Kierunek wiatru</td><td>236</td><td>11.962</td><td>0.193</td><td>98.390</td></tr>
+</tbody></table></div></details></section>
+<footer><h2>Interpretacja</h2><p>Te same poprawne etykiety dla prognozy surowej i skorygowanej.</p><p>Najkrótszy błąd na okręgu, od -180 do 180°. Pomijamy wiatr poniżej 1.0 m/s.</p><p>Prognoza minus pomiar; dodatni bias oznacza zawyżanie (dla kierunku przesunięcie kątowe).</p><p>95% przedział z 500 losowań dwudniowych bloków dni UTC wydania/predykcji; minimum 7 dni. Diagnostyczny, bez korekty na wiele porównań.</p><p>Wiersz oznacza jedną ocenioną prognozę. Różne paczki mogą dotyczyć tego samego pomiaru; wiersze nie są niezależnymi pomiarami.</p><p>Statystyki łączne liczymy z błędów wszystkich testów, bez uśredniania percentyli lub R².</p><p>Tylko prędkość i temperatura; brak przy stałych pomiarach. Dla kierunku nie stosujemy zwykłego R².</p><p>Progi opisowe: 1 m/s, 1°C, 15°. Nie stanowią zatwierdzonych kryteriów biznesowych.</p></footer></main></html>
