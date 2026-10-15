@@ -43,6 +43,8 @@ def load_sources(args, cfg: Settings, as_of: pd.Timestamp, training: bool) -> tu
         return (pd.read_csv(args.forecast_csv, sep=args.csv_separator, encoding="utf-8-sig"),
                 pd.read_csv(args.observation_csv, sep=args.csv_separator, encoding="utf-8-sig"))
     start = as_of - pd.Timedelta(days=cfg.history_days + 3 if training else 3)
+    if training and getattr(args, "start", None) is not None:
+        start = args.start - pd.Timedelta(days=3)
     # Przyszłe wartości znanej prognozy są legalnymi cechami; przyszłe wykonanie nie jest.
     end = as_of.ceil("15min") + pd.Timedelta(hours=cfg.max_model_lead_hours, minutes=15)
     forecast_connection = os.environ.get("PGE_WEATHER_FORECAST_CONNECTION", "").strip()

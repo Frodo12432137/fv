@@ -1,0 +1,32 @@
+{
+  "tryb": "trening_i_prognoza",
+  "strefa_czasowa": "Europe/Warsaw",
+  "konfiguracja_modelu": "weather_config.example.json",
+  "artefakty": "weather_artifacts",
+  "dane": {
+    "prognozy_csv": null,
+    "pomiary_csv": null,
+    "separator_csv": ",",
+    "rodzaj": "unspecified"
+  },
+  "trening": {
+    "start": null,
+    "koniec": null,
+    "dni_walidacji": 21,
+    "dni_testu": 21,
+    "liczba_testow": 2
+  },
+  "prognoza": {
+    "start": null,
+    "koniec": null,
+    "krok_godziny": 6,
+    "katalog_wynikow": "weather_output/prognozy"
+  },
+  "ocena": {
+    "start": null,
+    "koniec": null,
+    "pomiary_dostepne_do": null,
+    "pliki_prognoz": "weather_output/prognozy/*.csv",
+    "katalog_wynikow": "weather_output/evaluation"
+  }
+}

@@ -11,6 +11,19 @@ a cechy zawierają tylko dane dostępne przy otrzymaniu prognozy.
 
 ## Uruchomienie
 
+**VS Code:** otwórz folder repozytorium, przygotuj środowisko według poleceń
+poniżej i wybierz je przez `Python: Select Interpreter` → `.venv`.
+Zainstaluj polecane rozszerzenia Python i Python Debugger.
+Następnie otwórz **`start.py` i kliknij ▶ „Uruchom plik Python”** w prawym
+górnym rogu. Możesz też użyć F5 lub Ctrl+F5; gotowe profile znajdują się
+w panelu „Uruchamianie i debugowanie”.
+
+**Daty i tryb pracy ustawiasz w [`ustawienia_uruchomienia.json`](ustawienia_uruchomienia.json).**
+Plik zawiera początek i koniec historii uczenia, długość walidacji i testów,
+okres uruchomień prognoz oraz zakres oceny. Domyślnie wykonywany jest trening,
+a po jego zatwierdzeniu jedna prognoza. `null` oznacza automatyczny dobór daty.
+[Opis pól i przykład dat](URUCHAMIANIE_VSCODE.md).
+
 Python 3.11 lub 3.12, 64-bit. Na Windows:
 
 ```powershell
@@ -19,10 +32,22 @@ py -3.12 -m venv .venv
 Copy-Item weather_config.example.json weather_config.json
 ```
 
+Jeżeli zmieniasz parametry w `weather_config.json`, ustaw
+`konfiguracja_modelu` na `"weather_config.json"` we wspólnym pliku ustawień.
+Początkowo wskazuje on gotowy `weather_config.example.json`.
+
 Dla SQL ustaw `PGE_WEATHER_FORECAST_CONNECTION` i
 `PGE_WEATHER_OBSERVATION_CONNECTION` zgodnie z
 [instrukcją konfiguracji](START_KOREKTA_POGODY_24H.md#dane-i-połączenie-sql).
 Można też użyć wejść CSV bez połączenia z bazą.
+
+Sprawdzenie ustawień bez treningu i połączenia z SQL:
+
+```powershell
+.\.venv\Scripts\python.exe start.py --check
+```
+
+Dotychczasowe polecenia terminalowe nadal działają:
 
 ```powershell
 .\.venv\Scripts\python.exe uruchom_trening_pogody.py --config weather_config.json

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import importlib.metadata
+from dataclasses import replace
 from pathlib import Path
 
 import numpy as np
@@ -62,7 +63,13 @@ def select_methods(features, rows, train_mask, val_mask, validation_start, cfg, 
 
 
 def train(raw_forecasts: pd.DataFrame, raw_observations: pd.DataFrame, as_of: pd.Timestamp,
-          cfg: Settings, artifacts: Path, log=print, data_kind="unspecified") -> dict:
+          cfg: Settings, artifacts: Path, log=print, data_kind="unspecified", start: pd.Timestamp | None = None) -> dict:
+    history_start = start if start is not None else as_of - pd.Timedelta(days=cfg.history_days)
+    if pd.isna(history_start) or pd.isna(as_of) or history_start >= as_of:
+        raise ValueError("Początek historii uczenia musi być wcześniejszy niż koniec.")
+    if start is not None:
+        cfg = replace(cfg, history_days=max(1, int((as_of - history_start).ceil("D").days)))
+    log(f"Historia uczenia UTC: {history_start.isoformat()} – {as_of.isoformat()} (koniec wyłączny).")
     log("Przygotowanie wszystkich wydań prognoz i pomiarów.")
     forecasts = prepare_forecasts(raw_forecasts, cfg)
     time_drops_forecast = forecasts.attrs.get("dropped_timezone_rows", 0)
@@ -76,7 +83,7 @@ def train(raw_forecasts: pd.DataFrame, raw_observations: pd.DataFrame, as_of: pd
     targets = observation_targets(obs, cfg)
     targets = targets.loc[targets.label_available_at <= as_of].reset_index(drop=True)
     errors = residual_history(forecasts, targets, cfg)
-    eligible = forecasts.loc[(forecasts.available_at >= as_of - pd.Timedelta(days=cfg.history_days)) &
+    eligible = forecasts.loc[(forecasts.available_at >= history_start) & (forecasts.available_at < as_of) &
         (forecasts.valid_at > forecasts.available_at) &
         ((forecasts.valid_at - forecasts.available_at) <= pd.Timedelta(hours=cfg.max_model_lead_hours))]
     target_cols = targets[KEY + ["speed", "temperature", "direction", "label_available_at"]].rename(
@@ -84,7 +91,7 @@ def train(raw_forecasts: pd.DataFrame, raw_observations: pd.DataFrame, as_of: pd
     rows = eligible.merge(target_cols, on=KEY, how="inner", validate="many_to_one").sort_values(
         ["available_at", "farm", "valid_at"]).reset_index(drop=True)
     if rows.empty:
-        raise ValueError("Prognozy i pomiary nie mają wspólnych kwadransów w zadanym roku.")
+        raise ValueError("Prognozy i pomiary nie mają wspólnych kwadransów w zadanym okresie.")
     log(f"Budowa cech dostępnych przy wydaniu prognozy: {len(rows):,} wierszy.")
     features = build_features(rows, obs, errors, cfg, forecast_context=forecasts)
     test_reports, selection_reports, fold_reports, tuning_reports = [], [], [], []
@@ -150,6 +157,7 @@ def train(raw_forecasts: pd.DataFrame, raw_observations: pd.DataFrame, as_of: pd
             pass
     report = {
         "as_of_utc": as_of.isoformat(), "settings": cfg.to_dict(), "library_versions": versions,
+        "training_window": {"start_utc": history_start.isoformat(), "end_utc": as_of.isoformat()},
         "feature_columns": features.columns.tolist(),
         "published": publish, "folds": fold_reports, "publication_failures": failures,
         "tuning": tuning_reports, "model_version": "2.1.0", "data_kind": data_kind,

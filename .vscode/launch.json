@@ -1,0 +1,44 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Pogoda: start według ustawień",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/start.py",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "Pogoda: tylko trening",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/start.py",
+      "args": ["--mode", "trening"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "Pogoda: tylko prognozy",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/start.py",
+      "args": ["--mode", "prognoza"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    },
+    {
+      "name": "Pogoda: ocena zapisanych prognoz",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/start.py",
+      "args": ["--mode", "ocena"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "justMyCode": true
+    }
+  ]
+}

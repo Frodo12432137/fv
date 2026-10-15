@@ -7,6 +7,10 @@ parametrami: 96 kwadransów dla każdej z 19 skonfigurowanych farm.
 
 ## Uruchomienie na Windows
 
+Do pracy w VS Code użyj [instrukcji startu strzałką i ustawiania dat](URUCHAMIANIE_VSCODE.md).
+Plik `start.py` korzysta z `ustawienia_uruchomienia.json`; poniższe polecenia
+pozostają dostępne do uruchamiania skryptów bezpośrednio i w harmonogramach.
+
 Wymagany Python 3.11 lub 3.12 w wersji 64-bitowej oraz ODBC Driver 17 for SQL
 Server. Skopiuj zawartość ZIP do katalogu, np. `D:\app\weatherCorrection_v2`.
 Polecenia poniżej wykonuj w tym katalogu:

@@ -19,6 +19,8 @@ def main(argv=None):
     parser.add_argument("--observation-csv", type=Path, required=True)
     parser.add_argument("--config", type=Path, required=True, help="Konfiguracja użyta podczas treningu ocenianej prognozy.")
     parser.add_argument("--as-of", help="Chwila dostępności pomiarów, z offsetem; domyślnie teraz.")
+    parser.add_argument("--start", help="Początek ocenianych kwadransów (włącznie).")
+    parser.add_argument("--end", help="Koniec ocenianych kwadransów (wyłącznie).")
     parser.add_argument("--output", type=Path, default=Path("weather_output/evaluation"))
     parser.add_argument("--csv-separator", default=",")
     parser.add_argument("--data-kind", choices=["unspecified", "measured", "synthetic"], default="unspecified")
@@ -26,9 +28,23 @@ def main(argv=None):
     try:
         cfg = Settings.load(args.config)
         as_of = utc_time(args.as_of, cfg.timezone) if args.as_of else pd.Timestamp.now(tz="UTC")
+        start = utc_time(args.start, cfg.timezone) if args.start else None
+        end = utc_time(args.end, cfg.timezone) if args.end else None
+        if any(pd.isna(value) for value in (as_of, start, end) if value is not None):
+            raise ValueError("Niepoprawna data oceny.")
+        if start is not None and end is not None and start >= end:
+            raise ValueError("Początek oceny musi być wcześniejszy niż koniec.")
         output = pd.concat([pd.read_csv(path, sep=args.csv_separator, encoding="utf-8-sig") for path in args.predictions_csv], ignore_index=True)
         observations = pd.read_csv(args.observation_csv, sep=args.csv_separator, encoding="utf-8-sig")
         samples, metadata = snapshot_samples(output, observations, as_of, cfg)
+        if start is not None:
+            samples = samples.loc[samples.valid_at >= start]
+        if end is not None:
+            samples = samples.loc[samples.valid_at < end]
+        if samples.empty:
+            raise ValueError("Brak prognoz w wybranym okresie oceny.")
+        metadata["evaluation_window"] = {"start_utc": start.isoformat() if start is not None else None,
+                                         "end_utc": end.isoformat() if end is not None else None}
         assessment = build_assessment(samples, cfg, {**metadata, "data_kind": args.data_kind,
             "assessment_type": "Ocena zapisanych prognoz po nadejściu wykonania", "prediction_files": [p.name for p in args.predictions_csv]})
         save_assessment(args.output, assessment)
